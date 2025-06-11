@@ -1,0 +1,4 @@
+[submodule "public"]
+	path = public
+	url = git@github.com:mez3n/mez3n.blog.git
+	branch = main
