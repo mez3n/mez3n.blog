@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Submitting Patches To Newlib | Mez3n&#39;s Blog</title>
+<meta name="keywords" content="programming, newlib, cygwin, git, open-source">
+<meta name="description" content="Contributing to Newlib: A Step-by-Step Guide
+If you&rsquo;re interested in contributing to Newlib, the C standard library used by many embedded systems (including RTEMS and Cygwin), this guide will walk you through the process of submitting patches.
+What is Newlib?
+Newlib is a C standard library implementation intended for use on embedded systems. It&rsquo;s widely used in projects like RTEMS, Cygwin, and various bare-metal environments.
+Part 1: Creating and Submitting Patches
+1. Clone the Repository
+First, you need to clone the newlib-cygwin repository:">
+<meta name="author" content="">
+<link rel="canonical" href="https://mez3n.github.io/mez3n.blog/posts/makingpatchestonewlib/">
+<link crossorigin="anonymous" href="/mez3n.blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://mez3n.github.io/mez3n.blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://mez3n.github.io/mez3n.blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://mez3n.github.io/mez3n.blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://mez3n.github.io/mez3n.blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://mez3n.github.io/mez3n.blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://mez3n.github.io/mez3n.blog/posts/makingpatchestonewlib/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:url" content="https://mez3n.github.io/mez3n.blog/posts/makingpatchestonewlib/">
+  <meta property="og:site_name" content="Mez3n&#39;s Blog">
+  <meta property="og:title" content="Submitting Patches To Newlib">
+  <meta property="og:description" content="Contributing to Newlib: A Step-by-Step Guide If you’re interested in contributing to Newlib, the C standard library used by many embedded systems (including RTEMS and Cygwin), this guide will walk you through the process of submitting patches.
+What is Newlib? Newlib is a C standard library implementation intended for use on embedded systems. It’s widely used in projects like RTEMS, Cygwin, and various bare-metal environments.
+Part 1: Creating and Submitting Patches 1. Clone the Repository First, you need to clone the newlib-cygwin repository:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-06-17T16:12:01+03:00">
+    <meta property="article:modified_time" content="2025-06-17T16:12:01+03:00">
+    <meta property="article:tag" content="Programming">
+    <meta property="article:tag" content="Newlib">
+    <meta property="article:tag" content="Cygwin">
+    <meta property="article:tag" content="Git">
+    <meta property="article:tag" content="Open-Source">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Submitting Patches To Newlib">
+<meta name="twitter:description" content="Contributing to Newlib: A Step-by-Step Guide
+If you&rsquo;re interested in contributing to Newlib, the C standard library used by many embedded systems (including RTEMS and Cygwin), this guide will walk you through the process of submitting patches.
+What is Newlib?
+Newlib is a C standard library implementation intended for use on embedded systems. It&rsquo;s widely used in projects like RTEMS, Cygwin, and various bare-metal environments.
+Part 1: Creating and Submitting Patches
+1. Clone the Repository
+First, you need to clone the newlib-cygwin repository:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://mez3n.github.io/mez3n.blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Submitting Patches To Newlib",
+      "item": "https://mez3n.github.io/mez3n.blog/posts/makingpatchestonewlib/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Submitting Patches To Newlib",
+  "name": "Submitting Patches To Newlib",
+  "description": "Contributing to Newlib: A Step-by-Step Guide If you\u0026rsquo;re interested in contributing to Newlib, the C standard library used by many embedded systems (including RTEMS and Cygwin), this guide will walk you through the process of submitting patches.\nWhat is Newlib? Newlib is a C standard library implementation intended for use on embedded systems. It\u0026rsquo;s widely used in projects like RTEMS, Cygwin, and various bare-metal environments.\nPart 1: Creating and Submitting Patches 1. Clone the Repository First, you need to clone the newlib-cygwin repository:\n",
+  "keywords": [
+    "programming", "newlib", "cygwin", "git", "open-source"
+  ],
+  "articleBody": "Contributing to Newlib: A Step-by-Step Guide If you’re interested in contributing to Newlib, the C standard library used by many embedded systems (including RTEMS and Cygwin), this guide will walk you through the process of submitting patches.\nWhat is Newlib? Newlib is a C standard library implementation intended for use on embedded systems. It’s widely used in projects like RTEMS, Cygwin, and various bare-metal environments.\nPart 1: Creating and Submitting Patches 1. Clone the Repository First, you need to clone the newlib-cygwin repository:\ngit clone https://sourceware.org/git/newlib-cygwin.git cd newlib-cygwin 2. Make Your Changes After cloning, make your desired changes to the codebase. Ensure your modifications follow the project’s coding standards and conventions.\n3. Stage Your Changes Add all modified and new files to the staging area:\ngit add . Alternatively, you can add specific files:\ngit add path/to/modified/file.c 4. Commit Your Changes Create a commit with a descriptive message:\ngit commit -m \"Brief description of changes\" -m \"Detailed explanation of what was changed and why\" Example:\ngit commit -m \"Fix pthread_cond_clockwait header declaration\" -m \"Added missing clockid_t parameter and corrected function signature in pthread.h to match POSIX specification\" 5. Generate a Patch File Create a patch file for your last commit:\ngit format-patch HEAD~1 This generates a .patch file containing your changes.\n6. Submit Your Patch Submit your patch to the Newlib mailing list via email:\ngit send-email --to=newlib@sourceware.org your-patch-file.patch Note: You may need to configure git send-email first:\ngit config --global sendemail.smtpserver your-smtp-server git config --global sendemail.smtpuser your-email@example.com Part 2: Testing Patches in RTEMS To test your patch in RTEMS, you’ll need the RTEMS Source Builder (RSB). This tutorial assumes you’ve already followed the setup steps in the RTEMS User Manual.\n1. Clone the RTEMS Source Builder git clone git@gitlab.rtems.org:rtems/rtems-source-builder.git RSB cd RSB 2. Prepare Your Patch Copy your patch file to the RSB patches directory:\ncp /path/to/your/patch.patch rtems/patches/ Generate the SHA512 hash of your patch file:\nsha512sum rtems/patches/0001-fix-pthread-cond-clockwait-header.patch 3. Find Your BSP Configuration List available BSP configurations:\nls rtems/config/7/ Expected output:\nrtems-aarch64.bset rtems-arm.bset rtems-default.bset rtems-kernel.bset rtems-llvm.bset rtems-m68k.bset rtems-mips.bset rtems-powerpc.bset rtems-sparc.bset rtems-x86_64.bset rtems-tools.bset For this example, we’ll use SPARC. Check the SPARC configuration:\ncat rtems/config/7/rtems-sparc.bset Output:\n%define release 1 %define rtems_arch sparc %define with_libgomp %define with_newlib_tls %define gdb-disable-sim 1 %include 7/rtems-default.bset devel/sis-2-1 4. Trace the Configuration Chain The %include 7/rtems-default.bset line tells us to check the default configuration:\ncat rtems/config/7/rtems-default.bset Look for the GCC configuration line:\n%defineifnot with_rtems_gcc tools/rtems-gcc-13.3-newlib-head This points to the configuration file: rtems/config/tools/rtems-gcc-13.3-newlib-head.cfg\n5. Add Your Patch to the Configuration Edit the GCC configuration file and add your patch:\nnano rtems/config/tools/rtems-gcc-13.3-newlib-head.cfg Add these lines to the file:\n%patch add newlib -p1 file://0001-fix-pthread-cond-clockwait-header.patch %hash sha512 0001-fix-pthread-cond-clockwait-header.patch \\ YOUR_CALCULATED_SHA512_HASH_HERE Replace YOUR_CALCULATED_SHA512_HASH_HERE with the hash you calculated in step 2.\n6. Rebuild RTEMS Tools Navigate to the RTEMS directory and rebuild with your patch:\ncd rtems ../source-builder/sb-set-builder --prefix=/path/to/your/rtems/installation 7/rtems-sparc Replace /path/to/your/rtems/installation with your actual RTEMS installation directory.\nConclusion Contributing to open-source projects like Newlib is a great way to improve your programming skills and give back to the community.\n",
+  "wordCount" : "499",
+  "inLanguage": "en",
+  "datePublished": "2025-06-17T16:12:01+03:00",
+  "dateModified": "2025-06-17T16:12:01+03:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mez3n.github.io/mez3n.blog/posts/makingpatchestonewlib/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mez3n's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://mez3n.github.io/mez3n.blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://mez3n.github.io/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Submitting Patches To Newlib
+    </h1>
+    <div class="post-meta"><span title='2025-06-17 16:12:01 +0300 EEST'>June 17, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="contributing-to-newlib-a-step-by-step-guide">Contributing to Newlib: A Step-by-Step Guide<a hidden class="anchor" aria-hidden="true" href="#contributing-to-newlib-a-step-by-step-guide">#</a></h1>
+<p>If you&rsquo;re interested in contributing to Newlib, the C standard library used by many embedded systems (including RTEMS and Cygwin), this guide will walk you through the process of submitting patches.</p>
+<h2 id="what-is-newlib">What is Newlib?<a hidden class="anchor" aria-hidden="true" href="#what-is-newlib">#</a></h2>
+<p>Newlib is a C standard library implementation intended for use on embedded systems. It&rsquo;s widely used in projects like RTEMS, Cygwin, and various bare-metal environments.</p>
+<h2 id="part-1-creating-and-submitting-patches">Part 1: Creating and Submitting Patches<a hidden class="anchor" aria-hidden="true" href="#part-1-creating-and-submitting-patches">#</a></h2>
+<h3 id="1-clone-the-repository">1. Clone the Repository<a hidden class="anchor" aria-hidden="true" href="#1-clone-the-repository">#</a></h3>
+<p>First, you need to clone the newlib-cygwin repository:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://sourceware.org/git/newlib-cygwin.git
+</span></span><span style="display:flex;"><span>cd newlib-cygwin
+</span></span></code></pre></div><h3 id="2-make-your-changes">2. Make Your Changes<a hidden class="anchor" aria-hidden="true" href="#2-make-your-changes">#</a></h3>
+<p>After cloning, make your desired changes to the codebase. Ensure your modifications follow the project&rsquo;s coding standards and conventions.</p>
+<h3 id="3-stage-your-changes">3. Stage Your Changes<a hidden class="anchor" aria-hidden="true" href="#3-stage-your-changes">#</a></h3>
+<p>Add all modified and new files to the staging area:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git add .
+</span></span></code></pre></div><p>Alternatively, you can add specific files:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git add path/to/modified/file.c
+</span></span></code></pre></div><h3 id="4-commit-your-changes">4. Commit Your Changes<a hidden class="anchor" aria-hidden="true" href="#4-commit-your-changes">#</a></h3>
+<p>Create a commit with a descriptive message:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;Brief description of changes&#34;</span> -m <span style="color:#e6db74">&#34;Detailed explanation of what was changed and why&#34;</span>
+</span></span></code></pre></div><p><strong>Example:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;Fix pthread_cond_clockwait header declaration&#34;</span> -m <span style="color:#e6db74">&#34;Added missing clockid_t parameter and corrected function signature in pthread.h to match POSIX specification&#34;</span>
+</span></span></code></pre></div><h3 id="5-generate-a-patch-file">5. Generate a Patch File<a hidden class="anchor" aria-hidden="true" href="#5-generate-a-patch-file">#</a></h3>
+<p>Create a patch file for your last commit:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git format-patch HEAD~1
+</span></span></code></pre></div><p>This generates a <code>.patch</code> file containing your changes.</p>
+<h3 id="6-submit-your-patch">6. Submit Your Patch<a hidden class="anchor" aria-hidden="true" href="#6-submit-your-patch">#</a></h3>
+<p>Submit your patch to the Newlib mailing list via email:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git send-email --to<span style="color:#f92672">=</span>newlib@sourceware.org your-patch-file.patch
+</span></span></code></pre></div><p><strong>Note:</strong> You may need to configure git send-email first:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git config --global sendemail.smtpserver your-smtp-server
+</span></span><span style="display:flex;"><span>git config --global sendemail.smtpuser your-email@example.com
+</span></span></code></pre></div><h2 id="part-2-testing-patches-in-rtems">Part 2: Testing Patches in RTEMS<a hidden class="anchor" aria-hidden="true" href="#part-2-testing-patches-in-rtems">#</a></h2>
+<p>To test your patch in RTEMS, you&rsquo;ll need the RTEMS Source Builder (RSB). This tutorial assumes you&rsquo;ve already followed the setup steps in the <a href="https://docs.rtems.org/docs/6.1/user/start/index.html">RTEMS User Manual</a>.</p>
+<h3 id="1-clone-the-rtems-source-builder">1. Clone the RTEMS Source Builder<a hidden class="anchor" aria-hidden="true" href="#1-clone-the-rtems-source-builder">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone git@gitlab.rtems.org:rtems/rtems-source-builder.git RSB
+</span></span><span style="display:flex;"><span>cd RSB
+</span></span></code></pre></div><h3 id="2-prepare-your-patch">2. Prepare Your Patch<a hidden class="anchor" aria-hidden="true" href="#2-prepare-your-patch">#</a></h3>
+<p>Copy your patch file to the RSB patches directory:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp /path/to/your/patch.patch rtems/patches/
+</span></span></code></pre></div><p>Generate the SHA512 hash of your patch file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sha512sum rtems/patches/0001-fix-pthread-cond-clockwait-header.patch
+</span></span></code></pre></div><h3 id="3-find-your-bsp-configuration">3. Find Your BSP Configuration<a hidden class="anchor" aria-hidden="true" href="#3-find-your-bsp-configuration">#</a></h3>
+<p>List available BSP configurations:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ls rtems/config/7/
+</span></span></code></pre></div><p><strong>Expected output:</strong></p>
+<pre tabindex="0"><code>rtems-aarch64.bset  rtems-arm.bset   rtems-default.bset  rtems-kernel.bset  
+rtems-llvm.bset     rtems-m68k.bset  rtems-mips.bset    rtems-powerpc.bset  
+rtems-sparc.bset    rtems-x86_64.bset rtems-tools.bset
+</code></pre><p>For this example, we&rsquo;ll use SPARC. Check the SPARC configuration:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat rtems/config/7/rtems-sparc.bset
+</span></span></code></pre></div><p><strong>Output:</strong></p>
+<pre tabindex="0"><code>%define release 1
+%define rtems_arch sparc
+%define with_libgomp
+%define with_newlib_tls
+%define gdb-disable-sim 1
+%include 7/rtems-default.bset 
+devel/sis-2-1
+</code></pre><h3 id="4-trace-the-configuration-chain">4. Trace the Configuration Chain<a hidden class="anchor" aria-hidden="true" href="#4-trace-the-configuration-chain">#</a></h3>
+<p>The <code>%include 7/rtems-default.bset</code> line tells us to check the default configuration:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat rtems/config/7/rtems-default.bset
+</span></span></code></pre></div><p>Look for the GCC configuration line:</p>
+<pre tabindex="0"><code>%defineifnot with_rtems_gcc      tools/rtems-gcc-13.3-newlib-head
+</code></pre><p>This points to the configuration file: <code>rtems/config/tools/rtems-gcc-13.3-newlib-head.cfg</code></p>
+<h3 id="5-add-your-patch-to-the-configuration">5. Add Your Patch to the Configuration<a hidden class="anchor" aria-hidden="true" href="#5-add-your-patch-to-the-configuration">#</a></h3>
+<p>Edit the GCC configuration file and add your patch:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nano rtems/config/tools/rtems-gcc-13.3-newlib-head.cfg
+</span></span></code></pre></div><p>Add these lines to the file:</p>
+<pre tabindex="0"><code>%patch add newlib -p1 file://0001-fix-pthread-cond-clockwait-header.patch
+%hash sha512 0001-fix-pthread-cond-clockwait-header.patch \
+    YOUR_CALCULATED_SHA512_HASH_HERE
+</code></pre><p>Replace <code>YOUR_CALCULATED_SHA512_HASH_HERE</code> with the hash you calculated in step 2.</p>
+<h3 id="6-rebuild-rtems-tools">6. Rebuild RTEMS Tools<a hidden class="anchor" aria-hidden="true" href="#6-rebuild-rtems-tools">#</a></h3>
+<p>Navigate to the RTEMS directory and rebuild with your patch:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd rtems
+</span></span><span style="display:flex;"><span>../source-builder/sb-set-builder --prefix<span style="color:#f92672">=</span>/path/to/your/rtems/installation 7/rtems-sparc
+</span></span></code></pre></div><p>Replace <code>/path/to/your/rtems/installation</code> with your actual RTEMS installation directory.</p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Contributing to open-source projects like Newlib is a great way to improve your programming skills and give back to the community.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/programming/">Programming</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/newlib/">Newlib</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/cygwin/">Cygwin</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/git/">Git</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/open-source/">Open-Source</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://mez3n.github.io/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
