@@ -2,37 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://mez3n.github.io/mez3n.blog/categories/</loc>
+    <loc>http://localhost:1313/mez3n.blog/</loc>
+    <lastmod>2025-06-24T18:27:51+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/mez3n.blog/posts/</loc>
+    <lastmod>2025-06-24T18:27:51+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/mez3n.blog/posts/theworldofpthread/</loc>
+    <lastmod>2025-06-24T18:27:51+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/mez3n.blog/categories/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/tags/cygwin/</loc>
+    <loc>http://localhost:1313/mez3n.blog/tags/cygwin/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/categories/development/</loc>
+    <loc>http://localhost:1313/mez3n.blog/categories/development/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/tags/git/</loc>
+    <loc>http://localhost:1313/mez3n.blog/tags/git/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/</loc>
+    <loc>http://localhost:1313/mez3n.blog/tags/newlib/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/tags/newlib/</loc>
+    <loc>http://localhost:1313/mez3n.blog/tags/open-source/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/tags/open-source/</loc>
+    <loc>http://localhost:1313/mez3n.blog/tags/programming/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/posts/</loc>
+    <loc>http://localhost:1313/mez3n.blog/posts/makingpatchestonewlib/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/tags/programming/</loc>
-    <lastmod>2025-06-17T16:12:01+03:00</lastmod>
-  </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/posts/makingpatchestonewlib/</loc>
-    <lastmod>2025-06-17T16:12:01+03:00</lastmod>
-  </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/tags/</loc>
+    <loc>http://localhost:1313/mez3n.blog/tags/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url>
 </urlset>

@@ -2,45 +2,45 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Mez3n&#39;s Blog</title>
-    <link>https://mez3n.github.io/mez3n.blog/tags/</link>
+    <link>http://localhost:1313/mez3n.blog/tags/</link>
     <description>Recent content in Tags on Mez3n&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 17 Jun 2025 16:12:01 +0300</lastBuildDate>
-    <atom:link href="https://mez3n.github.io/mez3n.blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/mez3n.blog/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Cygwin</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/cygwin/</link>
+      <link>http://localhost:1313/mez3n.blog/tags/cygwin/</link>
       <pubDate>Tue, 17 Jun 2025 16:12:01 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/cygwin/</guid>
+      <guid>http://localhost:1313/mez3n.blog/tags/cygwin/</guid>
       <description></description>
     </item>
     <item>
       <title>Git</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/git/</link>
+      <link>http://localhost:1313/mez3n.blog/tags/git/</link>
       <pubDate>Tue, 17 Jun 2025 16:12:01 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/git/</guid>
+      <guid>http://localhost:1313/mez3n.blog/tags/git/</guid>
       <description></description>
     </item>
     <item>
       <title>Newlib</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/newlib/</link>
+      <link>http://localhost:1313/mez3n.blog/tags/newlib/</link>
       <pubDate>Tue, 17 Jun 2025 16:12:01 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/newlib/</guid>
+      <guid>http://localhost:1313/mez3n.blog/tags/newlib/</guid>
       <description></description>
     </item>
     <item>
       <title>Open-Source</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/open-source/</link>
+      <link>http://localhost:1313/mez3n.blog/tags/open-source/</link>
       <pubDate>Tue, 17 Jun 2025 16:12:01 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/open-source/</guid>
+      <guid>http://localhost:1313/mez3n.blog/tags/open-source/</guid>
       <description></description>
     </item>
     <item>
       <title>Programming</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/programming/</link>
+      <link>http://localhost:1313/mez3n.blog/tags/programming/</link>
       <pubDate>Tue, 17 Jun 2025 16:12:01 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/programming/</guid>
+      <guid>http://localhost:1313/mez3n.blog/tags/programming/</guid>
       <description></description>
     </item>
   </channel>
