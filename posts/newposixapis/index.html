@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/mez3n.blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=mez3n.blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>New APIs Added to POSIX Standard (Issue 8): A Comprehensive Implementation Guide | Mez3n&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="The POSIX Standard Issue 8, released in 2024, represents a significant milestone in operating system standardization, introducing essential APIs that enhance portability, functionality, and compliance across Unix-like systems. As part of my Google Summer of Code 2025 project with RTEMS.
+Project Overview: Bridging the POSIX Gap in RTEMS
+RTEMS, known for its reliability in mission-critical applications in space exploration currently lacks support for several key APIs introduced in POSIX Issue 8. This project aims to analyze, implement, and thoroughly test these missing APIs.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/mez3n.blog/posts/newposixapis/">
+<link crossorigin="anonymous" href="/mez3n.blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/mez3n.blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/mez3n.blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/mez3n.blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/mez3n.blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/mez3n.blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/mez3n.blog/posts/newposixapis/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      New APIs Added to POSIX Standard (Issue 8): A Comprehensive Implementation Guide
+    </h1>
+    <div class="post-meta"><span title='2025-06-01 21:06:56 +0300 EEST'>June 1, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>The POSIX Standard Issue 8, released in 2024, represents a significant milestone in operating system standardization, introducing essential APIs that enhance portability, functionality, and compliance across Unix-like systems. As part of my Google Summer of Code 2025 project with RTEMS.</p>
+<h2 id="project-overview-bridging-the-posix-gap-in-rtems">Project Overview: Bridging the POSIX Gap in RTEMS<a hidden class="anchor" aria-hidden="true" href="#project-overview-bridging-the-posix-gap-in-rtems">#</a></h2>
+<p>RTEMS, known for its reliability in mission-critical applications in space exploration currently lacks support for several key APIs introduced in POSIX Issue 8. This project aims to analyze, implement, and thoroughly test these missing APIs.</p>
+<h2 id="the-missing-apis-a-strategic-analysis">The Missing APIs: A Strategic Analysis<a hidden class="anchor" aria-hidden="true" href="#the-missing-apis-a-strategic-analysis">#</a></h2>
+<p>After conducting a comprehensive review of RTEMS&rsquo;s current POSIX compliance status, I&rsquo;ve identified APIs falling into three distinct categories that require different implementation approaches:</p>
+<h3 id="category-1-already-in-newlib-verification--testing-required">Category 1: Already in Newlib (Verification &amp; Testing Required)<a hidden class="anchor" aria-hidden="true" href="#category-1-already-in-newlib-verification--testing-required">#</a></h3>
+<p>These APIs exist in the Newlib C library but need comprehensive testing and documentation:</p>
+<h4 id="at_"><strong>at_quick_exit()</strong><a hidden class="anchor" aria-hidden="true" href="#at_">#</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Register functions to be called during quick program termination</li>
+<li><strong>Header</strong>: <code>&lt;stdlib.h&gt;</code></li>
+<li><strong>Prototype</strong>: <code>int at_quick_exit(void (*func)(void));</code></li>
+<li><strong>Status</strong>: ✅ Implemented in Newlib, requires testing framework</li>
+</ul>
+<h4 id="quick_"><strong>quick_exit()</strong><a hidden class="anchor" aria-hidden="true" href="#quick_">#</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Terminate program quickly without full cleanup</li>
+<li><strong>Header</strong>: <code>&lt;stdlib.h&gt;</code></li>
+<li><strong>Prototype</strong>: <code>_Noreturn void quick_exit(int status);</code></li>
+<li><strong>Status</strong>: ✅ Implemented in Newlib, requires testing framework</li>
+</ul>
+<h3 id="category-2-core-rtems-implementation-required">Category 2: Core RTEMS Implementation Required<a hidden class="anchor" aria-hidden="true" href="#category-2-core-rtems-implementation-required">#</a></h3>
+<p>These APIs require implementation directly in RTEMS with full kernel support:</p>
+<h4 id="pthread_"><strong>pthread_mutex_clocklock()</strong><a hidden class="anchor" aria-hidden="true" href="#pthread_">#</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Lock mutex with absolute timeout using specified clock</li>
+<li><strong>Header</strong>: <code>&lt;pthread.h&gt;</code></li>
+<li><strong>Prototype</strong>: <code>int pthread_mutex_clocklock(pthread_mutex_t *mutex, clockid_t clockid, const struct timespec *abstime);</code></li>
+<li><strong>Challenge</strong>: Integration with RTEMS thread queue infrastructure and multiple clock sources</li>
+<li><strong>Implementation Focus</strong>: Thread queue timeout handling, clock source abstraction</li>
+</ul>
+<h4 id="pthread_-1"><strong>pthread_cond_clockwait()</strong><a hidden class="anchor" aria-hidden="true" href="#pthread_-1">#</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Wait on condition variable with clock-specific timeout</li>
+<li><strong>Header</strong>: <code>&lt;pthread.h&gt;</code></li>
+<li><strong>Prototype</strong>: <code>int pthread_cond_clockwait(pthread_cond_t *cond, pthread_mutex_t *mutex, clockid_t clockid, const struct timespec *abstime);</code></li>
+<li><strong>Challenge</strong>: Atomic mutex unlock/wait operations with clock integration</li>
+</ul>
+<h4 id="pthread_-2"><strong>pthread_rwlock_clockrdlock() / pthread_rwlock_clockwrlock()</strong><a hidden class="anchor" aria-hidden="true" href="#pthread_-2">#</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Read/write lock acquisition with clock-specific timeouts</li>
+<li><strong>Headers</strong>: <code>&lt;pthread.h&gt;</code></li>
+<li><strong>Prototypes</strong>:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pthread_rwlock_clockrdlock</span>(<span style="color:#66d9ef">pthread_rwlock_t</span> <span style="color:#f92672">*</span>rwlock, <span style="color:#66d9ef">clockid_t</span> clockid, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>abstime);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pthread_rwlock_clockwrlock</span>(<span style="color:#66d9ef">pthread_rwlock_t</span> <span style="color:#f92672">*</span>rwlock, <span style="color:#66d9ef">clockid_t</span> clockid, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>abstime);
+</span></span></code></pre></div></li>
+<li><strong>Challenge</strong>: Reader-writer semantics with priority protocols and timeout management</li>
+</ul>
+<h4 id="sem_"><strong>sem_clockwait()</strong><a hidden class="anchor" aria-hidden="true" href="#sem_">#</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Semaphore wait with clock-specific timeout</li>
+<li><strong>Header</strong>: <code>&lt;semaphore.h&gt;</code></li>
+<li><strong>Prototype</strong>: <code>int sem_clockwait(sem_t *sem, clockid_t clockid, const struct timespec *abstime);</code></li>
+<li><strong>Challenge</strong>: Integration with RTEMS semaphore implementation</li>
+</ul>
+<h4 id="timespec_"><strong>timespec_get()</strong><a hidden class="anchor" aria-hidden="true" href="#timespec_">#</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Get current time with nanosecond precision</li>
+<li><strong>Header</strong>: <code>&lt;time.h&gt;</code></li>
+<li><strong>Prototype</strong>: <code>int timespec_get(struct timespec *ts, int base);</code></li>
+<li><strong>Implementation</strong>: Support for TIME_UTC base with potential for future extensions</li>
+</ul>
+<h4 id="posix_"><strong>posix_getdents()</strong><a hidden class="anchor" aria-hidden="true" href="#posix_">#</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Get directory entries in a portable format</li>
+<li><strong>Header</strong>: <code>&lt;dirent.h&gt;</code></li>
+<li><strong>Prototype</strong>: <code>ssize_t posix_getdents(int fd, void *buf, size_t nbytes, int *basep);</code></li>
+<li><strong>Challenge</strong>: Integration with RTEMS filesystem layer</li>
+</ul>
+<h4 id="dladdr"><strong>dladdr()</strong><a hidden class="anchor" aria-hidden="true" href="#dladdr">#</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Translate address to symbolic information</li>
+<li><strong>Header</strong>: <code>&lt;dlfcn.h&gt;</code></li>
+<li><strong>Prototype</strong>: <code>int dladdr(const void *addr, Dl_info *info);</code></li>
+<li><strong>Challenge</strong>: Symbol table management and debug information handling</li>
+</ul>
+<h3 id="category-3-freebsd-integration-libbsd">Category 3: FreeBSD Integration (libbsd)<a hidden class="anchor" aria-hidden="true" href="#category-3-freebsd-integration-libbsd">#</a></h3>
+<h4 id="ppoll"><strong>ppoll()</strong><a hidden class="anchor" aria-hidden="true" href="#ppoll">#</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Wait for file descriptor events with signal masking and timeout</li>
+<li><strong>Header</strong>: <code>&lt;poll.h&gt;</code></li>
+<li><strong>Prototype</strong>: <code>int ppoll(struct pollfd fds[], nfds_t nfds, const struct timespec *timeout, const sigset_t *sigmask);</code></li>
+<li><strong>Status</strong>: Available in FreeBSD, requires adaptation to RTEMS libbsd</li>
+</ul>
+<h2 id="technical-implementation-approach">Technical Implementation Approach<a hidden class="anchor" aria-hidden="true" href="#technical-implementation-approach">#</a></h2>
+<h3 id="phase-1-june-2---july-18">Phase 1: (June 2 - July 18)<a hidden class="anchor" aria-hidden="true" href="#phase-1-june-2---july-18">#</a></h3>
+<p><strong>Verification of Existing APIs</strong>:
+I&rsquo;ve already confirmed that <code>at_quick_exit()</code> and <code>quick_exit()</code> exist in Newlib by successfully patching the RTEMS Source Builder and adding debug output to these functions. The test produced expected results, confirming the APIs are functional but lack comprehensive test coverage.</p>
+<p><strong>Test-Driven Development Strategy</strong>:
+Following TDD principles, I&rsquo;m developing comprehensive test suites for all target APIs.</p>
+<p><strong>Clock-Based Synchronization APIs</strong>:
+The pthread clock variants represent the most technically challenging implementations, requiring deep integration with RTEMS&rsquo;s thread queue infrastructure. Key considerations include:</p>
+<p><strong>Pthread Clock Function Implementation</strong>:
+The four pthread clock variants (<code>pthread_mutex_clocklock()</code>, <code>pthread_cond_clockwait()</code>, <code>pthread_rwlock_clockrdlock()</code>, and <code>pthread_rwlock_clockwrlock()</code>) introduce clock-specific timeout capabilities to RTEMS&rsquo;s synchronization primitives. Unlike their traditional timed counterparts that rely solely on <code>CLOCK_REALTIME</code>, these functions allow developers to specify either <code>CLOCK_REALTIME</code> or <code>CLOCK_MONOTONIC</code> as the timeout reference.</p>
+<p><strong>Technical Implementation Challenges</strong>:</p>
+<ul>
+<li><strong>Clock Source Abstraction</strong>: Implementing unified timeout handling that seamlessly supports both <code>CLOCK_REALTIME</code> and <code>CLOCK_MONOTONIC</code> within RTEMS&rsquo;s existing infrastructure</li>
+<li><strong>Thread Queue Integration</strong>: Extending current timeout mechanisms to accommodate clock-specific behavior while maintaining performance and determinism</li>
+<li><strong>Synchronization Semantics</strong>: Ensuring atomic operations for condition variables (mutex unlock/wait) and proper reader-writer lock behavior with clock-based timeouts</li>
+<li><strong>Priority Protocol Compliance</strong>: Maintaining compatibility with priority inheritance and ceiling protocols across all clock-based synchronization operations</li>
+</ul>
+<p>The implementation will build upon RTEMS&rsquo;s proven thread queue timeout architecture while introducing the flexibility of multiple clock sources for enhanced real-time precision.</p>
+<h3 id="phase-2--july-18---august-25">Phase 2:  (July 18 - August 25)<a hidden class="anchor" aria-hidden="true" href="#phase-2--july-18---august-25">#</a></h3>
+<p><strong>File System Integration</strong>:
+<code>posix_getdents()</code> requires careful integration with RTEMS&rsquo;s filesystem layer, ensuring compatibility across different filesystem types while maintaining POSIX semantics.</p>
+<p><strong>ppoll() FreeBSD Adaptation</strong>:
+<code>ppoll()</code> implementation involves adapting existing FreeBSD code to work within RTEMS&rsquo;s libbsd framework, ensuring proper signal masking integration and timeout handling while maintaining compatibility with RTEMS&rsquo;s event-driven architecture.</p>
+<p><strong>Semaphore Clock Integration</strong>:
+<code>sem_clockwait()</code> requires extending RTEMS&rsquo;s semaphore implementation to support multiple clock sources, integrating with the existing semaphore blocking mechanisms while adding clock-specific timeout behavior.</p>
+<p><strong>High-Precision Time Retrieval</strong>:
+<code>timespec_get()</code> implementation focuses on providing nanosecond-precision time access with support for TIME_UTC base, potentially extensible to support additional time bases in future POSIX revisions.</p>
+<p><strong>Dynamic Symbol Resolution</strong>:
+<code>dladdr()</code> requires integration with RTEMS&rsquo;s dynamic loading infrastructure, implementing symbol table traversal and address-to-symbol mapping functionality while handling both static and dynamically loaded code segments.</p>
+<h2 id="development-environment-and-methodology">Development Environment and Methodology<a hidden class="anchor" aria-hidden="true" href="#development-environment-and-methodology">#</a></h2>
+<h3 id="tools-and-infrastructure">Tools and Infrastructure<a hidden class="anchor" aria-hidden="true" href="#tools-and-infrastructure">#</a></h3>
+<ul>
+<li><strong>Development Environment</strong>: ✅ RTEMS development environment configured</li>
+<li><strong>Version Control</strong>: ✅ Dedicated GitHub repository established</li>
+<li><strong>Testing Platform</strong>: QEMU-based simulation with Xilinx Zynq A9</li>
+<li><strong>Debugging</strong>: GDB integration for low-level debugging</li>
+</ul>
+<h3 id="quality-assurance">Quality Assurance<a hidden class="anchor" aria-hidden="true" href="#quality-assurance">#</a></h3>
+<ul>
+<li><strong>Code Review</strong>: All implementations will undergo thorough community review</li>
+<li><strong>Testing</strong>: Comprehensive test suites covering normal operation, edge cases, and error conditions</li>
+<li><strong>Documentation</strong>: Complete man pages and developer documentation for each API</li>
+<li><strong>Performance Analysis</strong>: Benchmarking to ensure implementations meet real-time requirements</li>
+</ul>
+<h2 id="real-world-impact">Real-World Impact<a hidden class="anchor" aria-hidden="true" href="#real-world-impact">#</a></h2>
+<p>These API implementations will provide significant benefits:</p>
+<p><strong>Enhanced Application Portability</strong>: Modern applications expecting POSIX Issue 8 APIs will run natively on RTEMS without modification.</p>
+<p><strong>Improved Time Handling</strong>: Clock-specific synchronization APIs enable more precise timing control, crucial for real-time applications.</p>
+<p><strong>Better Resource Management</strong>: Enhanced file descriptor and directory operations improve system efficiency.</p>
+<p><strong>Standards Compliance</strong>: Maintaining RTEMS&rsquo;s reputation as a standards-compliant RTOS for mission-critical applications.</p>
+<h2 id="timeline-and-milestones">Timeline and Milestones<a hidden class="anchor" aria-hidden="true" href="#timeline-and-milestones">#</a></h2>
+<h3 id="june-2---july-14">**June 2 - July 14:<a hidden class="anchor" aria-hidden="true" href="#june-2---july-14">#</a></h3>
+<ul>
+<li>Complete testing framework for Newlib APIs</li>
+<li>Implement and test <code>ppoll()</code> adaptation from FreeBSD</li>
+<li>Begin pthread clock synchronization APIs implementation</li>
+</ul>
+<h3 id="july-14---august-25">**July 14 - August 25:<a hidden class="anchor" aria-hidden="true" href="#july-14---august-25">#</a></h3>
+<ul>
+<li>Complete all pthread clock variants</li>
+<li>Implement <code>sem_clockwait()</code>, <code>timespec_get()</code>, <code>posix_getdents()</code>, and <code>dladdr()</code></li>
+<li>Comprehensive testing and documentation</li>
+</ul>
+<h3 id="august-25---september-1-integration-and-polish"><strong>August 25 - September 1: Integration and Polish</strong><a hidden class="anchor" aria-hidden="true" href="#august-25---september-1-integration-and-polish">#</a></h3>
+<ul>
+<li>Final testing and bug fixes</li>
+<li>Documentation review and updates</li>
+<li>Community feedback integration</li>
+</ul>
+<h2 id="future-roadmap">Future Roadmap<a hidden class="anchor" aria-hidden="true" href="#future-roadmap">#</a></h2>
+<p>This project establishes a foundation for continued POSIX Issue 8 compliance work. Future implementations will include:</p>
+<ul>
+<li><code>getresgid()</code>, <code>getresuid()</code>, <code>setresgid()</code>, <code>setresuid()</code></li>
+<li><code>posix_close()</code></li>
+<li>Additional APIs as identified by the RTEMS community</li>
+</ul>
+<h2 id="community-impact">Community Impact<a hidden class="anchor" aria-hidden="true" href="#community-impact">#</a></h2>
+<p>By implementing these APIs, RTEMS will:</p>
+<ul>
+<li>Maintain its competitive edge in the RTOS market</li>
+<li>Support modern application development practices</li>
+<li>Strengthen its position in aerospace, automotive, and industrial applications</li>
+<li>Demonstrate commitment to evolving standards</li>
+</ul>
+<p>This comprehensive implementation effort represents more than just adding new functions—it&rsquo;s about ensuring RTEMS remains a viable platform for next-generation real-time applications while maintaining the reliability and performance characteristics that make it suitable for mission-critical systems.</p>
+<hr>
+<p><em>This project is being developed as part of Google Summer of Code 2025 with the RTEMS Project. Progress updates and implementation details will be shared regularly through this blog and the RTEMS community channels.</em></p>
+<p><strong>References:</strong></p>
+<ul>
+<li><a href="https://gitlab.rtems.org/rtems/programs/gsoc/-/issues/69">RTEMS POSIX Compliance Status</a></li>
+<li><a href="https://pubs.opengroup.org/onlinepubs/9799919799/">POSIX Issue 8 Specification</a></li>
+<li><a href="https://github.com/mez3n">Project Repository</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

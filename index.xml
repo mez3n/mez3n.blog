@@ -31,5 +31,14 @@
 &lt;h3 id=&#34;1-clone-the-repository&#34;&gt;1. Clone the Repository&lt;/h3&gt;
 &lt;p&gt;First, you need to clone the newlib-cygwin repository:&lt;/p&gt;</description>
     </item>
+    <item>
+      <title>New APIs Added to POSIX Standard (Issue 8): A Comprehensive Implementation Guide</title>
+      <link>http://localhost:1313/mez3n.blog/posts/newposixapis/</link>
+      <pubDate>Sun, 01 Jun 2025 21:06:56 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/posts/newposixapis/</guid>
+      <description>&lt;p&gt;The POSIX Standard Issue 8, released in 2024, represents a significant milestone in operating system standardization, introducing essential APIs that enhance portability, functionality, and compliance across Unix-like systems. As part of my Google Summer of Code 2025 project with RTEMS.&lt;/p&gt;
+&lt;h2 id=&#34;project-overview-bridging-the-posix-gap-in-rtems&#34;&gt;Project Overview: Bridging the POSIX Gap in RTEMS&lt;/h2&gt;
+&lt;p&gt;RTEMS, known for its reliability in mission-critical applications in space exploration currently lacks support for several key APIs introduced in POSIX Issue 8. This project aims to analyze, implement, and thoroughly test these missing APIs.&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>
