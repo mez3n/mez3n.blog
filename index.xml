@@ -6,8 +6,18 @@
     <description>Recent content on Mez3n&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 24 Jun 2025 18:27:51 +0300</lastBuildDate>
+    <lastBuildDate>Sun, 06 Jul 2025 01:10:41 +0300</lastBuildDate>
     <atom:link href="http://localhost:1313/mez3n.blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pthread Internals: How Condition Variables Work</title>
+      <link>http://localhost:1313/mez3n.blog/posts/pthreadinternals/</link>
+      <pubDate>Sun, 06 Jul 2025 01:10:41 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/posts/pthreadinternals/</guid>
+      <description>&lt;h1 id=&#34;understanding-pthread-condition-variables-from-the-inside&#34;&gt;Understanding Pthread Condition Variables from the Inside&lt;/h1&gt;
+&lt;p&gt;In this blog post, we&amp;rsquo;ll explore how pthread synchronization primitives work internally, focusing on condition variables. We&amp;rsquo;ll dive deep into the RTEMS implementation to understand how &lt;code&gt;pthread_cond_wait&lt;/code&gt;, &lt;code&gt;pthread_cond_timedwait&lt;/code&gt;, and &lt;code&gt;pthread_cond_clockwait&lt;/code&gt; work under the hood.&lt;/p&gt;
+&lt;h2 id=&#34;why-start-with-pthread_cond_clockwait&#34;&gt;Why Start with pthread_cond_clockwait?&lt;/h2&gt;
+&lt;p&gt;We&amp;rsquo;ll begin with &lt;code&gt;pthread_cond_clockwait&lt;/code&gt; because it&amp;rsquo;s the most comprehensive function - it includes mutex locking, timeout handling, and clock selection. Understanding this function will help us grasp how the simpler variants work.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>POSIX Threads: Thread Queues and Synchronization Internals</title>
       <link>http://localhost:1313/mez3n.blog/posts/theworldofpthread/</link>

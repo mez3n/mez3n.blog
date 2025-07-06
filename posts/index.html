@@ -111,14 +111,16 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">NewPosixApis
+    <h2 class="entry-hint-parent">Pthread Internals: How Condition Variables Work
     </h2>
   </header>
   <div class="entry-content">
-    <p></p>
+    <p>Understanding Pthread Condition Variables from the Inside In this blog post, we’ll explore how pthread synchronization primitives work internally, focusing on condition variables. We’ll dive deep into the RTEMS implementation to understand how pthread_cond_wait, pthread_cond_timedwait, and pthread_cond_clockwait work under the hood.
+Why Start with pthread_cond_clockwait? We’ll begin with pthread_cond_clockwait because it’s the most comprehensive function - it includes mutex locking, timeout handling, and clock selection. Understanding this function will help us grasp how the simpler variants work.
+...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-06-28 21:06:56 +0300 EEST'>June 28, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to NewPosixApis" href="http://localhost:1313/mez3n.blog/posts/newposixapis/"></a>
+  <footer class="entry-footer"><span title='2025-07-06 01:10:41 +0300 EEST'>July 6, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pthread Internals: How Condition Variables Work" href="http://localhost:1313/mez3n.blog/posts/pthreadinternals/"></a>
 </article>
 
 <article class="post-entry"> 
@@ -148,6 +150,20 @@ Part 1: Creating and Submitting Patches 1. Clone the Repository First, you need 
   </div>
   <footer class="entry-footer"><span title='2025-06-17 16:12:01 +0300 EEST'>June 17, 2025</span></footer>
   <a class="entry-link" aria-label="post link to Submitting Patches To Newlib" href="http://localhost:1313/mez3n.blog/posts/makingpatchestonewlib/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">New APIs Added to POSIX Standard (Issue 8): A Comprehensive Implementation Guide
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>The POSIX Standard Issue 8, released in 2024, represents a significant milestone in operating system standardization, introducing essential APIs that enhance portability, functionality, and compliance across Unix-like systems. As part of my Google Summer of Code 2025 project with RTEMS.
+Project Overview: Bridging the POSIX Gap in RTEMS RTEMS, known for its reliability in mission-critical applications in space exploration currently lacks support for several key APIs introduced in POSIX Issue 8. This project aims to analyze, implement, and thoroughly test these missing APIs.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-06-01 21:06:56 +0300 EEST'>June 1, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to New APIs Added to POSIX Standard (Issue 8): A Comprehensive Implementation Guide" href="http://localhost:1313/mez3n.blog/posts/newposixapis/"></a>
 </article>
     </main>
     

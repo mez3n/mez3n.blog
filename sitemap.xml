@@ -3,13 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/mez3n.blog/</loc>
-    <lastmod>2025-06-28T21:06:56+03:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/mez3n.blog/posts/newposixapis/</loc>
-    <lastmod>2025-06-28T21:06:56+03:00</lastmod>
+    <lastmod>2025-07-06T01:10:41+03:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/mez3n.blog/posts/</loc>
-    <lastmod>2025-06-28T21:06:56+03:00</lastmod>
+    <lastmod>2025-07-06T01:10:41+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/mez3n.blog/posts/pthreadinternals/</loc>
+    <lastmod>2025-07-06T01:10:41+03:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/mez3n.blog/posts/theworldofpthread/</loc>
     <lastmod>2025-06-24T18:27:51+03:00</lastmod>
@@ -40,5 +40,8 @@
   </url><url>
     <loc>http://localhost:1313/mez3n.blog/tags/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/mez3n.blog/posts/newposixapis/</loc>
+    <lastmod>2025-06-01T21:06:56+03:00</lastmod>
   </url>
 </urlset>
