@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/mez3n.blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=mez3n.blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Pthread RWLock Internals: How Reader-Writer Lock Clock Functions Work | Mez3n&#39;s Blog</title>
+<meta name="keywords" content="pthread, RTEMS, synchronization, rwlock, internals">
+<meta name="description" content="Understanding Pthread Reader-Writer Lock Clock Functions from the Inside
+In this blog post, we&rsquo;ll explore how pthread reader-writer lock synchronization primitives work internally, focusing on the clock-aware variants. We&rsquo;ll dive deep into the RTEMS implementation to understand how pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock work under the hood.
+Why Reader-Writer Locks with Clock Support?
+Reader-writer locks (RWLocks) are a powerful synchronization primitive that allows multiple readers to access a resource simultaneously, while ensuring exclusive access for writers. The clock-aware variants (pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock) add precise timeout control with different clock types, providing more robust and predictable timeout behavior.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/mez3n.blog/posts/rwlocksinternals/">
+<link crossorigin="anonymous" href="/mez3n.blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/mez3n.blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/mez3n.blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/mez3n.blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/mez3n.blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/mez3n.blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/mez3n.blog/posts/rwlocksinternals/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pthread RWLock Internals: How Reader-Writer Lock Clock Functions Work
+    </h1>
+    <div class="post-meta"><span title='2025-07-16 21:58:29 +0300 EEST'>July 16, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="understanding-pthread-reader-writer-lock-clock-functions-from-the-inside">Understanding Pthread Reader-Writer Lock Clock Functions from the Inside<a hidden class="anchor" aria-hidden="true" href="#understanding-pthread-reader-writer-lock-clock-functions-from-the-inside">#</a></h1>
+<p>In this blog post, we&rsquo;ll explore how pthread reader-writer lock synchronization primitives work internally, focusing on the clock-aware variants. We&rsquo;ll dive deep into the RTEMS implementation to understand how <code>pthread_rwlock_clockrdlock</code> and <code>pthread_rwlock_clockwrlock</code> work under the hood.</p>
+<h2 id="why-reader-writer-locks-with-clock-support">Why Reader-Writer Locks with Clock Support?<a hidden class="anchor" aria-hidden="true" href="#why-reader-writer-locks-with-clock-support">#</a></h2>
+<p>Reader-writer locks (RWLocks) are a powerful synchronization primitive that allows multiple readers to access a resource simultaneously, while ensuring exclusive access for writers. The clock-aware variants (<code>pthread_rwlock_clockrdlock</code> and <code>pthread_rwlock_clockwrlock</code>) add precise timeout control with different clock types, providing more robust and predictable timeout behavior.</p>
+<h2 id="the-entry-points-rwlockclockrdlockc-and-rwlockclockwrlockc">The Entry Points: rwlockclockrdlock.c and rwlockclockwrlock.c<a hidden class="anchor" aria-hidden="true" href="#the-entry-points-rwlockclockrdlockc-and-rwlockclockwrlockc">#</a></h2>
+<p>Let&rsquo;s start by examining the implementation of both functions:</p>
+<h3 id="pthread_rwlock_clockrdlock">pthread_rwlock_clockrdlock<a hidden class="anchor" aria-hidden="true" href="#pthread_rwlock_clockrdlock">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pthread_rwlock_clockrdlock</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">pthread_rwlock_t</span>      <span style="color:#f92672">*</span>rwlock,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">clockid_t</span>              clock_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>abstime
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( abstime <span style="color:#f92672">==</span> NULL ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EINVAL;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( clock_id <span style="color:#f92672">!=</span> CLOCK_MONOTONIC <span style="color:#f92672">&amp;&amp;</span> clock_id <span style="color:#f92672">!=</span> CLOCK_REALTIME ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EINVAL;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_POSIX_RWLock_Rdlock_support</span>(
+</span></span><span style="display:flex;"><span>    rwlock,
+</span></span><span style="display:flex;"><span>    abstime,
+</span></span><span style="display:flex;"><span>    clock_id
+</span></span><span style="display:flex;"><span>  );
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="pthread_rwlock_clockwrlock">pthread_rwlock_clockwrlock<a hidden class="anchor" aria-hidden="true" href="#pthread_rwlock_clockwrlock">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pthread_rwlock_clockwrlock</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">pthread_rwlock_t</span>      <span style="color:#f92672">*</span>rwlock,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">clockid_t</span>              clock_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>abstime
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( abstime <span style="color:#f92672">==</span> NULL ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EINVAL;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( clock_id <span style="color:#f92672">!=</span> CLOCK_MONOTONIC <span style="color:#f92672">&amp;&amp;</span> clock_id <span style="color:#f92672">!=</span> CLOCK_REALTIME ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EINVAL;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_POSIX_RWLock_Wrlock_support</span>(
+</span></span><span style="display:flex;"><span>    rwlock,
+</span></span><span style="display:flex;"><span>    abstime,
+</span></span><span style="display:flex;"><span>    clock_id
+</span></span><span style="display:flex;"><span>  );
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="parameter-validation">Parameter Validation<a hidden class="anchor" aria-hidden="true" href="#parameter-validation">#</a></h3>
+<p>Both functions perform identical validation checks as required by the <a href="https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_rwlock_clockrdlock.html">POSIX specification</a>:</p>
+<ol>
+<li><strong>Timeout validation</strong>: <code>abstime</code> cannot be NULL for a timed lock operation</li>
+<li><strong>Clock validation</strong>: Only <code>CLOCK_MONOTONIC</code> and <code>CLOCK_REALTIME</code> are supported</li>
+</ol>
+<p>Notice that <code>clock_id</code> is passed as a value (not a pointer) to the support functions - this differs from the condition variable implementation but serves the same purpose.</p>
+<h2 id="the-core-logic-_posix_rwlock_rdlock_support">The Core Logic: _POSIX_RWLock_Rdlock_support<a hidden class="anchor" aria-hidden="true" href="#the-core-logic-_posix_rwlock_rdlock_support">#</a></h2>
+<p>Let&rsquo;s dive into the reader lock support function in <code>rwlockrdlock.c</code>. The function begins with variable declarations:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">_POSIX_RWLock_Rdlock_support</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">pthread_rwlock_t</span>      <span style="color:#f92672">*</span>rwlock,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>abstime,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">clockid_t</span>              clock_id
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  POSIX_RWLock_Control <span style="color:#f92672">*</span>the_rwlock;
+</span></span><span style="display:flex;"><span>  Thread_queue_Context  queue_context;
+</span></span><span style="display:flex;"><span>  Status_Control        status;
+</span></span></code></pre></div><h3 id="getting-the-internal-rwlock-object">Getting the Internal RWLock Object<a hidden class="anchor" aria-hidden="true" href="#getting-the-internal-rwlock-object">#</a></h3>
+<p>The first step is to get the internal RTEMS representation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>the_rwlock <span style="color:#f92672">=</span> <span style="color:#a6e22e">_POSIX_RWLock_Get</span>( rwlock );
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">POSIX_RWLOCK_VALIDATE_OBJECT</span>( the_rwlock );
+</span></span></code></pre></div><p>The <code>_POSIX_RWLock_Get</code> function simply casts the pthread rwlock to RTEMS&rsquo;s internal type:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">inline</span> POSIX_RWLock_Control <span style="color:#f92672">*</span><span style="color:#a6e22e">_POSIX_RWLock_Get</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">pthread_rwlock_t</span> <span style="color:#f92672">*</span>rwlock
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> (POSIX_RWLock_Control <span style="color:#f92672">*</span>) rwlock;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The <code>POSIX_RWLOCK_VALIDATE_OBJECT</code> macro performs validation:</p>
+<ul>
+<li>Checks if <code>the_rwlock</code> is not NULL</li>
+<li>Validates the magic number to ensure proper initialization</li>
+<li>Handles auto-initialization if needed</li>
+</ul>
+<h3 id="thread-queue-context-initialization">Thread Queue Context Initialization<a hidden class="anchor" aria-hidden="true" href="#thread-queue-context-initialization">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">_Thread_queue_Context_initialize</span>( <span style="color:#f92672">&amp;</span>queue_context );
+</span></span></code></pre></div><p>This function initializes the queue context structure that will be used for thread queuing operations, just like in the condition variable implementation.</p>
+<h2 id="clock-aware-timeout-setup">Clock-Aware Timeout Setup<a hidden class="anchor" aria-hidden="true" href="#clock-aware-timeout-setup">#</a></h2>
+<p>The function needs to set up the appropriate timeout mechanism based on the clock type:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( abstime <span style="color:#f92672">!=</span> NULL ) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_Thread_queue_Context_set_timeout_argument</span>( <span style="color:#f92672">&amp;</span>queue_context, abstime, true );
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( clock_id <span style="color:#f92672">==</span> CLOCK_MONOTONIC ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_Thread_queue_Context_set_enqueue_callout</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&amp;</span>queue_context,
+</span></span><span style="display:flex;"><span>      _Thread_queue_Add_timeout_monotonic_timespec
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> ( clock_id <span style="color:#f92672">==</span> CLOCK_REALTIME ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_Thread_queue_Context_set_enqueue_callout</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&amp;</span>queue_context,
+</span></span><span style="display:flex;"><span>      _Thread_queue_Add_timeout_realtime_timespec
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="understanding-the-clock-selection-logic">Understanding the Clock Selection Logic<a hidden class="anchor" aria-hidden="true" href="#understanding-the-clock-selection-logic">#</a></h3>
+<p>Unlike condition variables which had different functions for different clock types, the RWLock implementation uses a single support function that branches based on the clock_id parameter:</p>
+<ul>
+<li><strong>CLOCK_MONOTONIC</strong>: Uses <code>_Thread_queue_Add_timeout_monotonic_timespec</code></li>
+<li><strong>CLOCK_REALTIME</strong>: Uses <code>_Thread_queue_Add_timeout_realtime_timespec</code></li>
+</ul>
+<p>This approach is cleaner and more direct than the condition variable implementation.</p>
+<h2 id="the-core-rwlock-operation">The Core RWLock Operation<a hidden class="anchor" aria-hidden="true" href="#the-core-rwlock-operation">#</a></h2>
+<p>After setting up the timeout, the function performs the actual lock operation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>status <span style="color:#f92672">=</span> <span style="color:#a6e22e">_CORE_RWLock_Seize_for_reading</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&amp;</span>the_rwlock<span style="color:#f92672">-&gt;</span>RWLock,
+</span></span><span style="display:flex;"><span>  _Thread_Executing,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&amp;</span>queue_context
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><h3 id="understanding-_core_rwlock_seize_for_reading">Understanding _CORE_RWLock_Seize_for_reading<a hidden class="anchor" aria-hidden="true" href="#understanding-_core_rwlock_seize_for_reading">#</a></h3>
+<p>This function is the heart of the reader lock acquisition logic. Let&rsquo;s examine what it does:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>Status_Control <span style="color:#a6e22e">_CORE_RWLock_Seize_for_reading</span>(
+</span></span><span style="display:flex;"><span>  CORE_RWLock_Control  <span style="color:#f92672">*</span>the_rwlock,
+</span></span><span style="display:flex;"><span>  Thread_Control       <span style="color:#f92672">*</span>executing,
+</span></span><span style="display:flex;"><span>  Thread_queue_Context <span style="color:#f92672">*</span>queue_context
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  Thread_Control <span style="color:#f92672">*</span>owner;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  owner <span style="color:#f92672">=</span> the_rwlock<span style="color:#f92672">-&gt;</span>Owner;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( owner <span style="color:#f92672">==</span> NULL ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* No owner, we can acquire read lock */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_CORE_RWLock_Grant_reading_lock</span>( the_rwlock, executing, queue_context );
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">_CORE_RWLock_Is_reading</span>( owner ) ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Already held by readers, we can join */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_CORE_RWLock_Grant_reading_lock</span>( the_rwlock, executing, queue_context );
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">/* Writer holds the lock or writers are waiting, we must block */</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_CORE_RWLock_Enqueue_for_reading</span>( the_rwlock, executing, queue_context );
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="reader-lock-acquisition-states">Reader Lock Acquisition States<a hidden class="anchor" aria-hidden="true" href="#reader-lock-acquisition-states">#</a></h3>
+<p>The reader lock can be acquired immediately in two scenarios:</p>
+<ol>
+<li><strong>No Owner</strong>: The lock is completely free</li>
+<li><strong>Reader Owned</strong>: The lock is already held by one or more readers</li>
+</ol>
+<p>In both cases, <code>_CORE_RWLock_Grant_reading_lock</code> is called:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> Status_Control <span style="color:#a6e22e">_CORE_RWLock_Grant_reading_lock</span>(
+</span></span><span style="display:flex;"><span>  CORE_RWLock_Control  <span style="color:#f92672">*</span>the_rwlock,
+</span></span><span style="display:flex;"><span>  Thread_Control       <span style="color:#f92672">*</span>executing,
+</span></span><span style="display:flex;"><span>  Thread_queue_Context <span style="color:#f92672">*</span>queue_context
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( the_rwlock<span style="color:#f92672">-&gt;</span>Owner <span style="color:#f92672">==</span> NULL ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* First reader */</span>
+</span></span><span style="display:flex;"><span>    the_rwlock<span style="color:#f92672">-&gt;</span>Owner <span style="color:#f92672">=</span> executing;
+</span></span><span style="display:flex;"><span>    the_rwlock<span style="color:#f92672">-&gt;</span>number_of_readers <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Additional reader */</span>
+</span></span><span style="display:flex;"><span>    the_rwlock<span style="color:#f92672">-&gt;</span>number_of_readers<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_Thread_queue_Context_clear_priority_updates</span>( queue_context );
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_Thread_queue_Release</span>( <span style="color:#f92672">&amp;</span>the_rwlock<span style="color:#f92672">-&gt;</span>Queue, queue_context );
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> STATUS_SUCCESSFUL;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This function:</p>
+<ul>
+<li>Updates the reader count</li>
+<li>Sets the owner to the first reader (if no previous owner)</li>
+<li>Releases the queue and returns success</li>
+</ul>
+<h3 id="reader-lock-blocking">Reader Lock Blocking<a hidden class="anchor" aria-hidden="true" href="#reader-lock-blocking">#</a></h3>
+<p>If the lock is held by a writer or writers are waiting, the reader must block:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> Status_Control <span style="color:#a6e22e">_CORE_RWLock_Enqueue_for_reading</span>(
+</span></span><span style="display:flex;"><span>  CORE_RWLock_Control  <span style="color:#f92672">*</span>the_rwlock,
+</span></span><span style="display:flex;"><span>  Thread_Control       <span style="color:#f92672">*</span>executing,
+</span></span><span style="display:flex;"><span>  Thread_queue_Context <span style="color:#f92672">*</span>queue_context
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_Thread_queue_Enqueue</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&amp;</span>the_rwlock<span style="color:#f92672">-&gt;</span>Queue.Queue,
+</span></span><span style="display:flex;"><span>    CORE_RWLOCK_TQ_OPERATIONS,
+</span></span><span style="display:flex;"><span>    executing,
+</span></span><span style="display:flex;"><span>    queue_context
+</span></span><span style="display:flex;"><span>  );
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is where the timeout callbacks we set up earlier come into play. The thread is enqueued with the appropriate timeout mechanism.</p>
+<h2 id="the-core-logic-_posix_rwlock_wrlock_support">The Core Logic: _POSIX_RWLock_Wrlock_support<a hidden class="anchor" aria-hidden="true" href="#the-core-logic-_posix_rwlock_wrlock_support">#</a></h2>
+<p>Now let&rsquo;s examine the writer lock support function in <code>rwlockwrlock.c</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">_POSIX_RWLock_Wrlock_support</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">pthread_rwlock_t</span>      <span style="color:#f92672">*</span>rwlock,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>abstime,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">clockid_t</span>              clock_id
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  POSIX_RWLock_Control <span style="color:#f92672">*</span>the_rwlock;
+</span></span><span style="display:flex;"><span>  Thread_queue_Context  queue_context;
+</span></span><span style="display:flex;"><span>  Status_Control        status;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  the_rwlock <span style="color:#f92672">=</span> <span style="color:#a6e22e">_POSIX_RWLock_Get</span>( rwlock );
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">POSIX_RWLOCK_VALIDATE_OBJECT</span>( the_rwlock );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_Thread_queue_Context_initialize</span>( <span style="color:#f92672">&amp;</span>queue_context );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( abstime <span style="color:#f92672">!=</span> NULL ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_Thread_queue_Context_set_timeout_argument</span>( <span style="color:#f92672">&amp;</span>queue_context, abstime, true );
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( clock_id <span style="color:#f92672">==</span> CLOCK_MONOTONIC ) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">_Thread_queue_Context_set_enqueue_callout</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&amp;</span>queue_context,
+</span></span><span style="display:flex;"><span>        _Thread_queue_Add_timeout_monotonic_timespec
+</span></span><span style="display:flex;"><span>      );
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> ( clock_id <span style="color:#f92672">==</span> CLOCK_REALTIME ) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">_Thread_queue_Context_set_enqueue_callout</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&amp;</span>queue_context,
+</span></span><span style="display:flex;"><span>        _Thread_queue_Add_timeout_realtime_timespec
+</span></span><span style="display:flex;"><span>      );
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  status <span style="color:#f92672">=</span> <span style="color:#a6e22e">_CORE_RWLock_Seize_for_writing</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&amp;</span>the_rwlock<span style="color:#f92672">-&gt;</span>RWLock,
+</span></span><span style="display:flex;"><span>    _Thread_Executing,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&amp;</span>queue_context
+</span></span><span style="display:flex;"><span>  );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_POSIX_Get_error</span>( status );
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The writer lock support function follows the same pattern as the reader version but calls <code>_CORE_RWLock_Seize_for_writing</code> instead.</p>
+<h3 id="understanding-_core_rwlock_seize_for_writing">Understanding _CORE_RWLock_Seize_for_writing<a hidden class="anchor" aria-hidden="true" href="#understanding-_core_rwlock_seize_for_writing">#</a></h3>
+<p>The writer lock acquisition logic is more restrictive:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>Status_Control <span style="color:#a6e22e">_CORE_RWLock_Seize_for_writing</span>(
+</span></span><span style="display:flex;"><span>  CORE_RWLock_Control  <span style="color:#f92672">*</span>the_rwlock,
+</span></span><span style="display:flex;"><span>  Thread_Control       <span style="color:#f92672">*</span>executing,
+</span></span><span style="display:flex;"><span>  Thread_queue_Context <span style="color:#f92672">*</span>queue_context
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  Thread_Control <span style="color:#f92672">*</span>owner;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  owner <span style="color:#f92672">=</span> the_rwlock<span style="color:#f92672">-&gt;</span>Owner;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( owner <span style="color:#f92672">==</span> NULL ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* No owner, we can acquire write lock */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_CORE_RWLock_Grant_writing_lock</span>( the_rwlock, executing, queue_context );
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">/* Lock is held by someone, we must block */</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_CORE_RWLock_Enqueue_for_writing</span>( the_rwlock, executing, queue_context );
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="writer-lock-acquisition-states">Writer Lock Acquisition States<a hidden class="anchor" aria-hidden="true" href="#writer-lock-acquisition-states">#</a></h3>
+<p>The writer lock can only be acquired in one scenario:</p>
+<ol>
+<li><strong>No Owner</strong>: The lock is completely free</li>
+</ol>
+<p>If there&rsquo;s any owner (reader or writer), the writer must block.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> Status_Control <span style="color:#a6e22e">_CORE_RWLock_Grant_writing_lock</span>(
+</span></span><span style="display:flex;"><span>  CORE_RWLock_Control  <span style="color:#f92672">*</span>the_rwlock,
+</span></span><span style="display:flex;"><span>  Thread_Control       <span style="color:#f92672">*</span>executing,
+</span></span><span style="display:flex;"><span>  Thread_queue_Context <span style="color:#f92672">*</span>queue_context
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  the_rwlock<span style="color:#f92672">-&gt;</span>Owner <span style="color:#f92672">=</span> executing;
+</span></span><span style="display:flex;"><span>  the_rwlock<span style="color:#f92672">-&gt;</span>number_of_readers <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_Thread_queue_Context_clear_priority_updates</span>( queue_context );
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_Thread_queue_Release</span>( <span style="color:#f92672">&amp;</span>the_rwlock<span style="color:#f92672">-&gt;</span>Queue, queue_context );
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> STATUS_SUCCESSFUL;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This function:</p>
+<ul>
+<li>Sets the owner to the writing thread</li>
+<li>Clears the reader count</li>
+<li>Releases the queue and returns success</li>
+</ul>
+<h2 id="understanding-rwlock-timeout-behavior">Understanding RWLock Timeout Behavior<a hidden class="anchor" aria-hidden="true" href="#understanding-rwlock-timeout-behavior">#</a></h2>
+<p>Just like with condition variables, the clock type affects timeout behavior:</p>
+<h3 id="clock_realtime-timeouts">CLOCK_REALTIME Timeouts<a hidden class="anchor" aria-hidden="true" href="#clock_realtime-timeouts">#</a></h3>
+<ul>
+<li><strong>Wall Clock Time</strong>: Timeout is based on absolute calendar time</li>
+<li><strong>Affected by Time Changes</strong>: System clock adjustments can extend or shorten timeouts</li>
+<li><strong>Use Case</strong>: When you need timeouts based on absolute calendar time</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> timespec timeout;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">clock_gettime</span>(CLOCK_REALTIME, <span style="color:#f92672">&amp;</span>timeout);
+</span></span><span style="display:flex;"><span>timeout.tv_sec <span style="color:#f92672">+=</span> <span style="color:#ae81ff">5</span>;  <span style="color:#75715e">// 5 seconds from now
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Will timeout in 5 seconds of wall clock time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">pthread_rwlock_clockrdlock</span>(<span style="color:#f92672">&amp;</span>rwlock, CLOCK_REALTIME, <span style="color:#f92672">&amp;</span>timeout);
+</span></span></code></pre></div><h3 id="clock_monotonic-timeouts">CLOCK_MONOTONIC Timeouts<a hidden class="anchor" aria-hidden="true" href="#clock_monotonic-timeouts">#</a></h3>
+<ul>
+<li><strong>System Uptime</strong>: Timeout is based on monotonic system time</li>
+<li><strong>Immune to Time Changes</strong>: System clock adjustments don&rsquo;t affect it</li>
+<li><strong>Use Case</strong>: When you need reliable relative timeouts</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> timespec timeout;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">clock_gettime</span>(CLOCK_MONOTONIC, <span style="color:#f92672">&amp;</span>timeout);
+</span></span><span style="display:flex;"><span>timeout.tv_sec <span style="color:#f92672">+=</span> <span style="color:#ae81ff">5</span>;  <span style="color:#75715e">// 5 seconds from now
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Will timeout in exactly 5 seconds regardless of system clock changes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">pthread_rwlock_clockrdlock</span>(<span style="color:#f92672">&amp;</span>rwlock, CLOCK_MONOTONIC, <span style="color:#f92672">&amp;</span>timeout);
+</span></span></code></pre></div><h2 id="thread-queue-management-and-priority">Thread Queue Management and Priority<a hidden class="anchor" aria-hidden="true" href="#thread-queue-management-and-priority">#</a></h2>
+<p>RWLocks implement a sophisticated queuing system that handles both readers and writers:</p>
+<h3 id="reader-priority">Reader Priority<a hidden class="anchor" aria-hidden="true" href="#reader-priority">#</a></h3>
+<ul>
+<li>Multiple readers can be granted the lock simultaneously</li>
+<li>New readers can join existing readers without blocking</li>
+<li>Readers block only when writers are active or waiting</li>
+</ul>
+<h3 id="writer-priority">Writer Priority<a hidden class="anchor" aria-hidden="true" href="#writer-priority">#</a></h3>
+<ul>
+<li>Writers get exclusive access</li>
+<li>Writers block when any owner exists (reader or writer)</li>
+<li>The queuing system ensures fairness between readers and writers</li>
+</ul>
+<h3 id="priority-inheritance">Priority Inheritance<a hidden class="anchor" aria-hidden="true" href="#priority-inheritance">#</a></h3>
+<p>The RWLock implementation supports priority inheritance to prevent priority inversion:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define CORE_RWLOCK_TQ_OPERATIONS &amp;_Thread_queue_Operations_priority_inherit
+</span></span></span></code></pre></div><p>This ensures that when a high-priority thread blocks on an RWLock, it can temporarily boost the priority of the lock holder.</p>
+<h2 id="error-handling-and-return-values">Error Handling and Return Values<a hidden class="anchor" aria-hidden="true" href="#error-handling-and-return-values">#</a></h2>
+<p>Both functions use the same error handling pattern:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_POSIX_Get_error</span>( status );
+</span></span></code></pre></div><p>The <code>_POSIX_Get_error</code> function converts RTEMS internal status codes to POSIX error codes:</p>
+<ul>
+<li><code>STATUS_SUCCESSFUL</code> → <code>0</code></li>
+<li><code>STATUS_TIMEOUT</code> → <code>ETIMEDOUT</code></li>
+<li><code>STATUS_UNAVAILABLE</code> → <code>EBUSY</code></li>
+<li><code>STATUS_OBJECT_WAS_DELETED</code> → <code>EINVAL</code></li>
+<li><code>STATUS_DEADLOCK</code> → <code>EDEADLK</code></li>
+</ul>
+<h2 id="comparison-with-non-clock-variants">Comparison with Non-Clock Variants<a hidden class="anchor" aria-hidden="true" href="#comparison-with-non-clock-variants">#</a></h2>
+<p>The clock-aware functions provide enhanced timeout control compared to their non-clock counterparts:</p>
+<h3 id="traditional-timed-functions">Traditional Timed Functions<a hidden class="anchor" aria-hidden="true" href="#traditional-timed-functions">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// Uses clock from rwlock attributes (usually CLOCK_REALTIME)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">pthread_rwlock_timedrdlock</span>(<span style="color:#f92672">&amp;</span>rwlock, <span style="color:#f92672">&amp;</span>timeout);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pthread_rwlock_timedwrlock</span>(<span style="color:#f92672">&amp;</span>rwlock, <span style="color:#f92672">&amp;</span>timeout);
+</span></span></code></pre></div><h3 id="clock-aware-functions">Clock-Aware Functions<a hidden class="anchor" aria-hidden="true" href="#clock-aware-functions">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// Explicit clock selection
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">pthread_rwlock_clockrdlock</span>(<span style="color:#f92672">&amp;</span>rwlock, CLOCK_MONOTONIC, <span style="color:#f92672">&amp;</span>timeout);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pthread_rwlock_clockwrlock</span>(<span style="color:#f92672">&amp;</span>rwlock, CLOCK_REALTIME, <span style="color:#f92672">&amp;</span>timeout);
+</span></span></code></pre></div><h2 id="summary">Summary<a hidden class="anchor" aria-hidden="true" href="#summary">#</a></h2>
+<p>The pthread reader-writer lock clock functions in RTEMS demonstrate several key concepts:</p>
+<ol>
+<li><strong>Unified Timeout Handling</strong>: Both reader and writer functions use the same timeout setup mechanism</li>
+<li><strong>Clock-Specific Callbacks</strong>: Different timeout behaviors are handled through appropriate timeout functions</li>
+<li><strong>Reader-Writer Semantics</strong>: Multiple readers can coexist, but writers need exclusive access</li>
+<li><strong>Priority Inheritance</strong>: The implementation prevents priority inversion through priority inheritance</li>
+<li><strong>Robust Error Handling</strong>: Comprehensive error code mapping from internal status to POSIX errors</li>
+</ol>
+<h3 id="the-complete-flow-summary">The Complete Flow Summary<a hidden class="anchor" aria-hidden="true" href="#the-complete-flow-summary">#</a></h3>
+<h4 id="for-reader-lock">For Reader Lock:<a hidden class="anchor" aria-hidden="true" href="#for-reader-lock">#</a></h4>
+<ol>
+<li><strong>API Entry</strong>: <code>pthread_rwlock_clockrdlock()</code> validates parameters and delegates to support function</li>
+<li><strong>Timeout Setup</strong>: Appropriate timeout callback is selected based on clock type</li>
+<li><strong>Lock Attempt</strong>: Check if lock can be acquired immediately (no owner or readers-only)</li>
+<li><strong>Grant or Block</strong>: Either grant the lock immediately or enqueue the thread with timeout</li>
+<li><strong>Wakeup Processing</strong>: When awakened, error codes are converted and returned</li>
+</ol>
+<h4 id="for-writer-lock">For Writer Lock:<a hidden class="anchor" aria-hidden="true" href="#for-writer-lock">#</a></h4>
+<ol>
+<li><strong>API Entry</strong>: <code>pthread_rwlock_clockwrlock()</code> validates parameters and delegates to support function</li>
+<li><strong>Timeout Setup</strong>: Appropriate timeout callback is selected based on clock type</li>
+<li><strong>Lock Attempt</strong>: Check if lock can be acquired immediately (no owner only)</li>
+<li><strong>Grant or Block</strong>: Either grant exclusive access or enqueue the thread with timeout</li>
+<li><strong>Wakeup Processing</strong>: When awakened, error codes are converted and returned</li>
+</ol>
+<p>This implementation showcases how RTEMS provides robust, real-time capable synchronization primitives while maintaining POSIX compliance and offering advanced features like configurable clock sources for timeout operations.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/mez3n.blog/tags/pthread/">Pthread</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/rtems/">RTEMS</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/synchronization/">Synchronization</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/rwlock/">Rwlock</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/internals/">Internals</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
