@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/mez3n.blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=mez3n.blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS | Mez3n&#39;s Blog</title>
+<meta name="keywords" content="GSoC, RTEMS, POSIX, C, Programming, Open Source">
+<meta name="description" content="GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS
+As I reach the midpoint of my Google Summer of Code 2025 journey with RTEMS, I&rsquo;m excited to share the progress I&rsquo;ve made on implementing POSIX Issue 8 functions. This project aims to enhance RTEMS&rsquo; POSIX compliance by adding support for new functions introduced in the latest POSIX standard.
+Project Overview
+My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 functions in RTEMS:">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/mez3n.blog/posts/midtermeval/">
+<link crossorigin="anonymous" href="/mez3n.blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/mez3n.blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/mez3n.blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/mez3n.blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/mez3n.blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/mez3n.blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/mez3n.blog/posts/midtermeval/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS
+    </h1>
+    <div class="post-meta"><span title='2025-07-16 21:51:29 +0300 EEST'>July 16, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="gsoc-2025-midterm-evaluation-implementing-posix-issue-8-functions-in-rtems">GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS<a hidden class="anchor" aria-hidden="true" href="#gsoc-2025-midterm-evaluation-implementing-posix-issue-8-functions-in-rtems">#</a></h1>
+<p>As I reach the midpoint of my Google Summer of Code 2025 journey with RTEMS, I&rsquo;m excited to share the progress I&rsquo;ve made on implementing POSIX Issue 8 functions. This project aims to enhance RTEMS&rsquo; POSIX compliance by adding support for new functions introduced in the latest POSIX standard.</p>
+<h2 id="project-overview">Project Overview<a hidden class="anchor" aria-hidden="true" href="#project-overview">#</a></h2>
+<p>My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 functions in RTEMS:</p>
+<ul>
+<li><code>pthread_cond_clockwait()</code></li>
+<li><code>pthread_mutex_clocklock()</code></li>
+<li><code>pthread_rwlock_clockrdlock()</code></li>
+<li><code>pthread_rwlock_clockwrlock()</code></li>
+<li><code>sem_clockwait()</code></li>
+<li><code>timespec_get()</code></li>
+<li><code>posix_getdents()</code></li>
+<li><code>ppoll()</code></li>
+<li><code>dladdr()</code></li>
+<li><code>quick_exit()</code> and <code>at_quick_exit()</code></li>
+</ul>
+<h2 id="completed-work">Completed Work<a hidden class="anchor" aria-hidden="true" href="#completed-work">#</a></h2>
+<h3 id="1-posix-header-ok-tests--completed">1. POSIX Header OK Tests (✅ Completed)<a hidden class="anchor" aria-hidden="true" href="#1-posix-header-ok-tests--completed">#</a></h3>
+<p><strong>Merge Request:</strong> <a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/497">#497</a></p>
+<p>The first major milestone was creating API header OK tests for all the functions I planned to implement. These tests verify that the function prototypes are correctly declared in the appropriate headers.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">/* Example from testsuites/psxtests/psxhdrs/pthread/pthread_cond_clockwait.c */</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define _POSIX_C_SOURCE 202405L
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifdef HAVE_CONFIG_H
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;config.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;pthread.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef _POSIX_THREADS
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#error &#34;rtems is supposed to have pthread_cond_clockwait&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if !defined(_POSIX_CLOCK_SELECTION) || _POSIX_CLOCK_SELECTION == -1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#error &#34;rtems is supposed to have pthread_cond_clockwait&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">test</span>(<span style="color:#66d9ef">void</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">test</span>(<span style="color:#66d9ef">void</span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">pthread_cond_t</span> cond <span style="color:#f92672">=</span> PTHREAD_COND_INITIALIZER;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">pthread_mutex_t</span> mutex <span style="color:#f92672">=</span> PTHREAD_MUTEX_INITIALIZER;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">clockid_t</span> clock_id <span style="color:#f92672">=</span> CLOCK_REALTIME;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">struct</span> timespec abstime;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> result;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  result <span style="color:#f92672">=</span> <span style="color:#a6e22e">pthread_cond_clockwait</span>(<span style="color:#f92672">&amp;</span>cond, <span style="color:#f92672">&amp;</span>mutex, clock_id, <span style="color:#f92672">&amp;</span>abstime);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> result;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This phase involved creating comprehensive tests for all target functions, ensuring they would compile correctly with the proper feature test macros and guards.</p>
+<h3 id="2-newlib-header-updates--completed--merged">2. Newlib Header Updates (✅ Completed &amp; Merged)<a hidden class="anchor" aria-hidden="true" href="#2-newlib-header-updates--completed--merged">#</a></h3>
+<p><strong>Newlib Patch Series:</strong> <a href="https://sourceware.org/pipermail/newlib/2025/021926.html">Merged into newlib main</a></p>
+<p>A crucial part of the project was updating the newlib C library (which RTEMS uses) to include the proper function prototypes. My 5-patch series was successfully merged into newlib&rsquo;s main branch:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">/* Added to newlib/libc/include/time.h */</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if __POSIX_VISIBLE &gt;= 200112 || __ISO_C_VISIBLE &gt;= 2011
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">timespec_get</span>(<span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/* Added to newlib/libc/sys/rtems/include/semaphore.h */</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if defined(__rtems__) &amp;&amp; (_POSIX_C_SOURCE &gt;= 202405L)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sem_clockwait</span>(<span style="color:#66d9ef">sem_t</span> <span style="color:#f92672">*</span>__sem, <span style="color:#66d9ef">clockid_t</span> __clock_id, 
+</span></span><span style="display:flex;"><span>                  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>__abstime);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/* Updated guards for quick_exit() and at_quick_exit() in stdlib.h */</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if __ISO_C_VISIBLE &gt;= 2011 || (_POSIX_C_SOURCE &gt;= 202405L)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">at_quick_exit</span>(<span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>)(<span style="color:#66d9ef">void</span>));
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">quick_exit</span>(<span style="color:#66d9ef">int</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span></code></pre></div><p>The patch series included:</p>
+<ol>
+<li><strong>timespec_get()</strong> prototype addition to <code>time.h</code></li>
+<li><strong>pthread.h</strong> guard updates for POSIX Issue 8 functions</li>
+<li><strong>sem_clockwait()</strong> prototype addition to <code>semaphore.h</code></li>
+<li><strong>ppoll()</strong> prototype addition to <code>sys/poll.h</code></li>
+<li><strong>quick_exit()</strong> and <strong>at_quick_exit()</strong> guard updates in <code>stdlib.h</code></li>
+</ol>
+<h3 id="3-pthread-clock-functions-implementation--completed">3. pthread Clock Functions Implementation (✅ Completed)<a hidden class="anchor" aria-hidden="true" href="#3-pthread-clock-functions-implementation--completed">#</a></h3>
+<p><strong>Merge Request:</strong> <a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/547">#547</a></p>
+<p>I successfully implemented four pthread clock functions:</p>
+<h4 id="pthread_cond_clockwait">pthread_cond_clockwait()<a hidden class="anchor" aria-hidden="true" href="#pthread_cond_clockwait">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pthread_cond_clockwait</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">pthread_cond_t</span> <span style="color:#f92672">*</span>cond,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">pthread_mutex_t</span> <span style="color:#f92672">*</span>mutex,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">clockid_t</span> clock_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>abstime
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (abstime <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EINVAL;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (clock_id <span style="color:#f92672">!=</span> CLOCK_MONOTONIC <span style="color:#f92672">&amp;&amp;</span> clock_id <span style="color:#f92672">!=</span> CLOCK_REALTIME) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EINVAL;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_POSIX_Condition_variables_Wait_support</span>(cond, mutex, abstime, clock_id);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="pthread_mutex_clocklock">pthread_mutex_clocklock()<a hidden class="anchor" aria-hidden="true" href="#pthread_mutex_clocklock">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pthread_mutex_clocklock</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">pthread_mutex_t</span> <span style="color:#f92672">*</span>mutex,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">clockid_t</span> clock_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>abstime
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (clock_id <span style="color:#f92672">==</span> CLOCK_REALTIME) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_POSIX_Mutex_Lock_support</span>(
+</span></span><span style="display:flex;"><span>      mutex,
+</span></span><span style="display:flex;"><span>      abstime,
+</span></span><span style="display:flex;"><span>      _Thread_queue_Add_timeout_realtime_timespec
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (clock_id <span style="color:#f92672">==</span> CLOCK_MONOTONIC) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_POSIX_Mutex_Lock_support</span>(
+</span></span><span style="display:flex;"><span>      mutex,
+</span></span><span style="display:flex;"><span>      abstime,
+</span></span><span style="display:flex;"><span>      _Thread_queue_Add_timeout_monotonic_timespec
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> EINVAL;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The implementation also included comprehensive test suites that verify:</p>
+<ul>
+<li>Correct behavior with different clock types (CLOCK_REALTIME, CLOCK_MONOTONIC)</li>
+<li>Proper error handling for invalid parameters</li>
+</ul>
+<h3 id="4-quick_exit-and-at_quick_exit-tests--completed">4. quick_exit() and at_quick_exit() Tests (✅ Completed)<a hidden class="anchor" aria-hidden="true" href="#4-quick_exit-and-at_quick_exit-tests--completed">#</a></h3>
+<p><strong>Merge Request:</strong> <a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/584">#584</a></p>
+<p>Implementing tests for the <code>quick_exit()</code> and <code>at_quick_exit()</code> functions. These functions provide a middle ground between <code>exit()</code> (which performs full cleanup) and <code>_Exit()</code> (which performs no cleanup).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">/* Test implementation showing LIFO handler execution */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> counter;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">at_quick_exit_0</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">assert</span>(counter <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">++</span>counter;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">at_quick_exit_1</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">assert</span>(counter <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">++</span>counter;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">at_quick_exit_2</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">assert</span>(counter <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">++</span>counter;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">exit_thread</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>arg) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> eno;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// Register handlers in order: 2, 1, 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  eno <span style="color:#f92672">=</span> <span style="color:#a6e22e">at_quick_exit</span>(at_quick_exit_2);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">assert</span>(eno <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  eno <span style="color:#f92672">=</span> <span style="color:#a6e22e">at_quick_exit</span>(at_quick_exit_1);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">assert</span>(eno <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  eno <span style="color:#f92672">=</span> <span style="color:#a6e22e">at_quick_exit</span>(at_quick_exit_0);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">assert</span>(eno <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// Handlers execute in LIFO order: 0, 1, 2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">quick_exit</span>(EXIT_STATUS);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The test uses a custom fatal extension to validate that:</p>
+<ol>
+<li>All <code>at_quick_exit()</code> handlers execute in LIFO order</li>
+<li>The program terminates with the correct exit status</li>
+<li><code>quick_exit()</code> properly terminates the entire program (not just the thread)</li>
+</ol>
+<h2 id="remaining-work-for-final-evaluation">Remaining Work for Final Evaluation<a hidden class="anchor" aria-hidden="true" href="#remaining-work-for-final-evaluation">#</a></h2>
+<p>The remaining functions to implement and test are:</p>
+<ol>
+<li><strong><code>sem_clockwait()</code></strong> - Semaphore wait with clock specification</li>
+<li><strong><code>timespec_get()</code></strong> - Get current time with specified time base</li>
+<li><strong><code>posix_getdents()</code></strong> - Get directory entries in POSIX format</li>
+<li><strong><code>ppoll()</code></strong> - Poll file descriptors with signal mask</li>
+<li><strong><code>dladdr()</code></strong> - Get symbol information from address</li>
+</ol>
+<h2 id="learning-outcomes">Learning Outcomes<a hidden class="anchor" aria-hidden="true" href="#learning-outcomes">#</a></h2>
+<p>This project has significantly enhanced my understanding of:</p>
+<ul>
+<li><strong>POSIX Standards</strong>: Deep dive into POSIX Issue 8 specifications</li>
+<li><strong>Real-time Systems</strong>: Understanding RTEMS architecture and threading</li>
+<li><strong>C Library Development</strong>: Working with newlib and system-level programming</li>
+<li><strong>Open Source Collaboration</strong>: Working with maintainers and following review processes</li>
+<li><strong>Testing Methodologies</strong>: Creating comprehensive test suites for system-level functions</li>
+</ul>
+<h2 id="looking-forward">Looking Forward<a hidden class="anchor" aria-hidden="true" href="#looking-forward">#</a></h2>
+<p>The second half of GSoC will focus on completing the remaining functions and ensuring all tests pass.</p>
+<p>This project contributes to RTEMS&rsquo; goal of providing comprehensive POSIX compliance, which is crucial for developers who need to port POSIX applications to real-time systems.</p>
+<h2 id="links">Links<a hidden class="anchor" aria-hidden="true" href="#links">#</a></h2>
+<ul>
+<li><strong>Project Repository</strong>: <a href="https://gitlab.rtems.org/rtems/rtos/rtems">RTEMS GitLab</a></li>
+<li><strong>Merge Request #497</strong>: <a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/497">POSIX Header OK Tests</a></li>
+<li><strong>Merge Request #547</strong>: <a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/547">pthread Clock Functions</a></li>
+<li><strong>Merge Request #584</strong>: <a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/584">quick_exit Tests</a></li>
+<li><strong>Newlib Patches</strong>: <a href="https://sourceware.org/pipermail/newlib/2025/021926.html">Merged Patches</a></li>
+</ul>
+<hr>
+<p><em>This blog post represents my midterm evaluation for Google Summer of Code 2025. The project continues to progress toward full POSIX Issue 8 compliance in RTEMS.</em></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/mez3n.blog/tags/gsoc/">GSoC</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/rtems/">RTEMS</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/posix/">POSIX</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/c/">C</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/programming/">Programming</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/open-source/">Open Source</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
