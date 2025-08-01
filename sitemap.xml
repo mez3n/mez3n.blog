@@ -2,61 +2,79 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/mez3n.blog/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/categories/</loc>
     <lastmod>2025-07-16T21:58:29+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/posts/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/categories/development/</loc>
     <lastmod>2025-07-16T21:58:29+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/tags/c/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/internals/</loc>
+    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/</loc>
+    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/posts/</loc>
+    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/pthread/</loc>
+    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/</loc>
+    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/rtems/</loc>
+    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/rwlock/</loc>
+    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/synchronization/</loc>
+    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/categories/systems-programming/</loc>
+    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/</loc>
+    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/c/</loc>
     <lastmod>2025-07-16T21:51:29+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/categories/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/gsoc/</loc>
     <lastmod>2025-07-16T21:51:29+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/categories/development/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/posts/midtermeval/</loc>
     <lastmod>2025-07-16T21:51:29+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/tags/gsoc/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/open-source/</loc>
     <lastmod>2025-07-16T21:51:29+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/posts/midtermeval/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/posix/</loc>
     <lastmod>2025-07-16T21:51:29+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/tags/open-source/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/programming/</loc>
     <lastmod>2025-07-16T21:51:29+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/tags/posix/</loc>
-    <lastmod>2025-07-16T21:51:29+03:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/mez3n.blog/tags/programming/</loc>
-    <lastmod>2025-07-16T21:51:29+03:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/mez3n.blog/tags/rtems/</loc>
-    <lastmod>2025-07-16T21:51:29+03:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/mez3n.blog/tags/</loc>
-    <lastmod>2025-07-16T21:51:29+03:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/mez3n.blog/posts/pthreadinternals/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/posts/pthreadinternals/</loc>
     <lastmod>2025-07-06T01:10:41+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/posts/theworldofpthread/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/posts/theworldofpthread/</loc>
     <lastmod>2025-06-24T18:27:51+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/tags/cygwin/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/cygwin/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/tags/git/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/git/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/tags/newlib/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/newlib/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/posts/makingpatchestonewlib/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/posts/makingpatchestonewlib/</loc>
     <lastmod>2025-06-17T16:12:01+03:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/mez3n.blog/posts/newposixapis/</loc>
+    <loc>https://mez3n.github.io/mez3n.blog/posts/newposixapis/</loc>
     <lastmod>2025-06-01T21:06:56+03:00</lastmod>
   </url>
 </urlset>

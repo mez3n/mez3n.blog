@@ -2,17 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Categories on Mez3n&#39;s Blog</title>
-    <link>http://localhost:1313/mez3n.blog/categories/</link>
+    <link>https://mez3n.github.io/mez3n.blog/categories/</link>
     <description>Recent content in Categories on Mez3n&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 16 Jul 2025 21:51:29 +0300</lastBuildDate>
-    <atom:link href="http://localhost:1313/mez3n.blog/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 16 Jul 2025 21:58:29 +0300</lastBuildDate>
+    <atom:link href="https://mez3n.github.io/mez3n.blog/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Development</title>
-      <link>http://localhost:1313/mez3n.blog/categories/development/</link>
-      <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
-      <guid>http://localhost:1313/mez3n.blog/categories/development/</guid>
+      <link>https://mez3n.github.io/mez3n.blog/categories/development/</link>
+      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
+      <guid>https://mez3n.github.io/mez3n.blog/categories/development/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Systems Programming</title>
+      <link>https://mez3n.github.io/mez3n.blog/categories/systems-programming/</link>
+      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
+      <guid>https://mez3n.github.io/mez3n.blog/categories/systems-programming/</guid>
       <description></description>
     </item>
   </channel>
