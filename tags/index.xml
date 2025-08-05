@@ -2,101 +2,115 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Mez3n&#39;s Blog</title>
-    <link>https://mez3n.github.io/mez3n.blog/tags/</link>
+    <link>http://localhost:1313/mez3n.blog/tags/</link>
     <description>Recent content in Tags on Mez3n&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 16 Jul 2025 21:58:29 +0300</lastBuildDate>
-    <atom:link href="https://mez3n.github.io/mez3n.blog/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Internals</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/internals/</link>
-      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/internals/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Pthread</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/pthread/</link>
-      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/pthread/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>RTEMS</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/rtems/</link>
-      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/rtems/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Rwlock</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/rwlock/</link>
-      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/rwlock/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Synchronization</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/synchronization/</link>
-      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/synchronization/</guid>
-      <description></description>
-    </item>
+    <lastBuildDate>Tue, 05 Aug 2025 18:46:59 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/mez3n.blog/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>C</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/c/</link>
-      <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/c/</guid>
+      <link>http://localhost:1313/mez3n.blog/tags/c/</link>
+      <pubDate>Tue, 05 Aug 2025 18:46:59 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/c/</guid>
       <description></description>
     </item>
     <item>
-      <title>GSoC</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/gsoc/</link>
-      <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/gsoc/</guid>
+      <title>Posix</title>
+      <link>http://localhost:1313/mez3n.blog/tags/posix/</link>
+      <pubDate>Tue, 05 Aug 2025 18:46:59 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/posix/</guid>
       <description></description>
     </item>
     <item>
-      <title>Open Source</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/open-source/</link>
-      <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/open-source/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>POSIX</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/posix/</link>
-      <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/posix/</guid>
+      <title>Process-Management</title>
+      <link>http://localhost:1313/mez3n.blog/tags/process-management/</link>
+      <pubDate>Tue, 05 Aug 2025 18:46:59 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/process-management/</guid>
       <description></description>
     </item>
     <item>
       <title>Programming</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/programming/</link>
+      <link>http://localhost:1313/mez3n.blog/tags/programming/</link>
+      <pubDate>Tue, 05 Aug 2025 18:46:59 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/programming/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>System-Calls</title>
+      <link>http://localhost:1313/mez3n.blog/tags/system-calls/</link>
+      <pubDate>Tue, 05 Aug 2025 18:46:59 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/system-calls/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Internals</title>
+      <link>http://localhost:1313/mez3n.blog/tags/internals/</link>
+      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/internals/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pthread</title>
+      <link>http://localhost:1313/mez3n.blog/tags/pthread/</link>
+      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/pthread/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RTEMS</title>
+      <link>http://localhost:1313/mez3n.blog/tags/rtems/</link>
+      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/rtems/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Rwlock</title>
+      <link>http://localhost:1313/mez3n.blog/tags/rwlock/</link>
+      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/rwlock/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Synchronization</title>
+      <link>http://localhost:1313/mez3n.blog/tags/synchronization/</link>
+      <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/synchronization/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>GSoC</title>
+      <link>http://localhost:1313/mez3n.blog/tags/gsoc/</link>
       <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/programming/</guid>
+      <guid>http://localhost:1313/mez3n.blog/tags/gsoc/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Open Source</title>
+      <link>http://localhost:1313/mez3n.blog/tags/open-source/</link>
+      <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/tags/open-source/</guid>
       <description></description>
     </item>
     <item>
       <title>Cygwin</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/cygwin/</link>
+      <link>http://localhost:1313/mez3n.blog/tags/cygwin/</link>
       <pubDate>Tue, 17 Jun 2025 16:12:01 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/cygwin/</guid>
+      <guid>http://localhost:1313/mez3n.blog/tags/cygwin/</guid>
       <description></description>
     </item>
     <item>
       <title>Git</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/git/</link>
+      <link>http://localhost:1313/mez3n.blog/tags/git/</link>
       <pubDate>Tue, 17 Jun 2025 16:12:01 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/git/</guid>
+      <guid>http://localhost:1313/mez3n.blog/tags/git/</guid>
       <description></description>
     </item>
     <item>
       <title>Newlib</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/newlib/</link>
+      <link>http://localhost:1313/mez3n.blog/tags/newlib/</link>
       <pubDate>Tue, 17 Jun 2025 16:12:01 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/newlib/</guid>
+      <guid>http://localhost:1313/mez3n.blog/tags/newlib/</guid>
       <description></description>
     </item>
   </channel>

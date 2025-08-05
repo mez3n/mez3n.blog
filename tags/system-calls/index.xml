@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>C on Mez3n&#39;s Blog</title>
-    <link>http://localhost:1313/mez3n.blog/tags/c/</link>
-    <description>Recent content in C on Mez3n&#39;s Blog</description>
+    <title>System-Calls on Mez3n&#39;s Blog</title>
+    <link>http://localhost:1313/mez3n.blog/tags/system-calls/</link>
+    <description>Recent content in System-Calls on Mez3n&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 05 Aug 2025 18:46:59 +0300</lastBuildDate>
-    <atom:link href="http://localhost:1313/mez3n.blog/tags/c/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/mez3n.blog/tags/system-calls/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The Exit Family: Understanding Program Termination in C</title>
       <link>http://localhost:1313/mez3n.blog/posts/theexitfamily/</link>
@@ -17,16 +17,6 @@
 &lt;p&gt;When a C program needs to terminate, there are several different functions available, each with distinct behaviors and use cases. Understanding the differences between &lt;code&gt;exit()&lt;/code&gt;, &lt;code&gt;_exit()&lt;/code&gt;, &lt;code&gt;_Exit()&lt;/code&gt;, &lt;code&gt;abort()&lt;/code&gt;, and &lt;code&gt;quick_exit()&lt;/code&gt; is crucial for writing robust system software and understanding how programs interact with the operating system.&lt;/p&gt;
 &lt;h2 id=&#34;the-standard-exit-function&#34;&gt;The Standard exit() Function&lt;/h2&gt;
 &lt;p&gt;The &lt;code&gt;exit()&lt;/code&gt; function is the most commonly used program termination function, defined in &lt;code&gt;&amp;lt;stdlib.h&amp;gt;&lt;/code&gt;. It performs a clean shutdown of the program by executing cleanup routines before terminating.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS</title>
-      <link>http://localhost:1313/mez3n.blog/posts/midtermeval/</link>
-      <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
-      <guid>http://localhost:1313/mez3n.blog/posts/midtermeval/</guid>
-      <description>&lt;h1 id=&#34;gsoc-2025-midterm-evaluation-implementing-posix-issue-8-functions-in-rtems&#34;&gt;GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS&lt;/h1&gt;
-&lt;p&gt;As I reach the midpoint of my Google Summer of Code 2025 journey with RTEMS, I&amp;rsquo;m excited to share the progress I&amp;rsquo;ve made on implementing POSIX Issue 8 functions. This project aims to enhance RTEMS&amp;rsquo; POSIX compliance by adding support for new functions introduced in the latest POSIX standard.&lt;/p&gt;
-&lt;h2 id=&#34;project-overview&#34;&gt;Project Overview&lt;/h2&gt;
-&lt;p&gt;My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 functions in RTEMS:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

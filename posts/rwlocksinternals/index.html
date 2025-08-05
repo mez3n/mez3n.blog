@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/mez3n.blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=mez3n.blog/livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>Pthread RWLock Internals: How Reader-Writer Lock Clock Functions Work | Mez3n&#39;s Blog</title>
 <meta name="keywords" content="pthread, RTEMS, synchronization, rwlock, internals">
 <meta name="description" content="Understanding Pthread Reader-Writer Lock Clock Functions from the Inside
@@ -12,16 +12,16 @@ In this blog post, we&rsquo;ll explore how pthread reader-writer lock synchroniz
 Why Reader-Writer Locks with Clock Support?
 Reader-writer locks (RWLocks) are a powerful synchronization primitive that allows multiple readers to access a resource simultaneously, while ensuring exclusive access for writers. The clock-aware variants (pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock) add precise timeout control with different clock types, providing more robust and predictable timeout behavior.">
 <meta name="author" content="">
-<link rel="canonical" href="https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/">
+<link rel="canonical" href="http://localhost:1313/mez3n.blog/posts/rwlocksinternals/">
 <link crossorigin="anonymous" href="/mez3n.blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://mez3n.github.io/mez3n.blog/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://mez3n.github.io/mez3n.blog/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://mez3n.github.io/mez3n.blog/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://mez3n.github.io/mez3n.blog/apple-touch-icon.png">
-<link rel="mask-icon" href="https://mez3n.github.io/mez3n.blog/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/mez3n.blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/mez3n.blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/mez3n.blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/mez3n.blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/mez3n.blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/mez3n.blog/posts/rwlocksinternals/">
 <noscript>
     <style>
         #theme-toggle,
@@ -58,78 +58,7 @@ Reader-writer locks (RWLocks) are a powerful synchronization primitive that allo
         }
 
     </style>
-</noscript><meta property="og:url" content="https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/">
-  <meta property="og:site_name" content="Mez3n&#39;s Blog">
-  <meta property="og:title" content="Pthread RWLock Internals: How Reader-Writer Lock Clock Functions Work">
-  <meta property="og:description" content="Understanding Pthread Reader-Writer Lock Clock Functions from the Inside In this blog post, we’ll explore how pthread reader-writer lock synchronization primitives work internally, focusing on the clock-aware variants. We’ll dive deep into the RTEMS implementation to understand how pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock work under the hood.
-Why Reader-Writer Locks with Clock Support? Reader-writer locks (RWLocks) are a powerful synchronization primitive that allows multiple readers to access a resource simultaneously, while ensuring exclusive access for writers. The clock-aware variants (pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock) add precise timeout control with different clock types, providing more robust and predictable timeout behavior.">
-  <meta property="og:locale" content="en-us">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-07-16T21:58:29+03:00">
-    <meta property="article:modified_time" content="2025-07-16T21:58:29+03:00">
-    <meta property="article:tag" content="Pthread">
-    <meta property="article:tag" content="RTEMS">
-    <meta property="article:tag" content="Synchronization">
-    <meta property="article:tag" content="Rwlock">
-    <meta property="article:tag" content="Internals">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pthread RWLock Internals: How Reader-Writer Lock Clock Functions Work">
-<meta name="twitter:description" content="Understanding Pthread Reader-Writer Lock Clock Functions from the Inside
-In this blog post, we&rsquo;ll explore how pthread reader-writer lock synchronization primitives work internally, focusing on the clock-aware variants. We&rsquo;ll dive deep into the RTEMS implementation to understand how pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock work under the hood.
-Why Reader-Writer Locks with Clock Support?
-Reader-writer locks (RWLocks) are a powerful synchronization primitive that allows multiple readers to access a resource simultaneously, while ensuring exclusive access for writers. The clock-aware variants (pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock) add precise timeout control with different clock types, providing more robust and predictable timeout behavior.">
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://mez3n.github.io/mez3n.blog/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "Pthread RWLock Internals: How Reader-Writer Lock Clock Functions Work",
-      "item": "https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Pthread RWLock Internals: How Reader-Writer Lock Clock Functions Work",
-  "name": "Pthread RWLock Internals: How Reader-Writer Lock Clock Functions Work",
-  "description": "Understanding Pthread Reader-Writer Lock Clock Functions from the Inside In this blog post, we\u0026rsquo;ll explore how pthread reader-writer lock synchronization primitives work internally, focusing on the clock-aware variants. We\u0026rsquo;ll dive deep into the RTEMS implementation to understand how pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock work under the hood.\nWhy Reader-Writer Locks with Clock Support? Reader-writer locks (RWLocks) are a powerful synchronization primitive that allows multiple readers to access a resource simultaneously, while ensuring exclusive access for writers. The clock-aware variants (pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock) add precise timeout control with different clock types, providing more robust and predictable timeout behavior.\n",
-  "keywords": [
-    "pthread", "RTEMS", "synchronization", "rwlock", "internals"
-  ],
-  "articleBody": "Understanding Pthread Reader-Writer Lock Clock Functions from the Inside In this blog post, we’ll explore how pthread reader-writer lock synchronization primitives work internally, focusing on the clock-aware variants. We’ll dive deep into the RTEMS implementation to understand how pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock work under the hood.\nWhy Reader-Writer Locks with Clock Support? Reader-writer locks (RWLocks) are a powerful synchronization primitive that allows multiple readers to access a resource simultaneously, while ensuring exclusive access for writers. The clock-aware variants (pthread_rwlock_clockrdlock and pthread_rwlock_clockwrlock) add precise timeout control with different clock types, providing more robust and predictable timeout behavior.\nThe Entry Points: rwlockclockrdlock.c and rwlockclockwrlock.c Let’s start by examining the implementation of both functions:\npthread_rwlock_clockrdlock int pthread_rwlock_clockrdlock( pthread_rwlock_t *rwlock, clockid_t clock_id, const struct timespec *abstime ) { if ( abstime == NULL ) { return EINVAL; } if ( clock_id != CLOCK_MONOTONIC \u0026\u0026 clock_id != CLOCK_REALTIME ) { return EINVAL; } return _POSIX_RWLock_Rdlock_support( rwlock, abstime, clock_id ); } pthread_rwlock_clockwrlock int pthread_rwlock_clockwrlock( pthread_rwlock_t *rwlock, clockid_t clock_id, const struct timespec *abstime ) { if ( abstime == NULL ) { return EINVAL; } if ( clock_id != CLOCK_MONOTONIC \u0026\u0026 clock_id != CLOCK_REALTIME ) { return EINVAL; } return _POSIX_RWLock_Wrlock_support( rwlock, abstime, clock_id ); } Parameter Validation Both functions perform identical validation checks as required by the POSIX specification:\nTimeout validation: abstime cannot be NULL for a timed lock operation Clock validation: Only CLOCK_MONOTONIC and CLOCK_REALTIME are supported Notice that clock_id is passed as a value (not a pointer) to the support functions - this differs from the condition variable implementation but serves the same purpose.\nThe Core Logic: _POSIX_RWLock_Rdlock_support Let’s dive into the reader lock support function in rwlockrdlock.c. The function begins with variable declarations:\nint _POSIX_RWLock_Rdlock_support( pthread_rwlock_t *rwlock, const struct timespec *abstime, clockid_t clock_id ) { POSIX_RWLock_Control *the_rwlock; Thread_queue_Context queue_context; Status_Control status; Getting the Internal RWLock Object The first step is to get the internal RTEMS representation:\nthe_rwlock = _POSIX_RWLock_Get( rwlock ); POSIX_RWLOCK_VALIDATE_OBJECT( the_rwlock ); The _POSIX_RWLock_Get function simply casts the pthread rwlock to RTEMS’s internal type:\nstatic inline POSIX_RWLock_Control *_POSIX_RWLock_Get( pthread_rwlock_t *rwlock ) { return (POSIX_RWLock_Control *) rwlock; } The POSIX_RWLOCK_VALIDATE_OBJECT macro performs validation:\nChecks if the_rwlock is not NULL Validates the magic number to ensure proper initialization Handles auto-initialization if needed Thread Queue Context Initialization _Thread_queue_Context_initialize( \u0026queue_context ); This function initializes the queue context structure that will be used for thread queuing operations, just like in the condition variable implementation.\nClock-Aware Timeout Setup The function needs to set up the appropriate timeout mechanism based on the clock type:\nif ( abstime != NULL ) { _Thread_queue_Context_set_timeout_argument( \u0026queue_context, abstime, true ); if ( clock_id == CLOCK_MONOTONIC ) { _Thread_queue_Context_set_enqueue_callout( \u0026queue_context, _Thread_queue_Add_timeout_monotonic_timespec ); } else if ( clock_id == CLOCK_REALTIME ) { _Thread_queue_Context_set_enqueue_callout( \u0026queue_context, _Thread_queue_Add_timeout_realtime_timespec ); } } Understanding the Clock Selection Logic Unlike condition variables which had different functions for different clock types, the RWLock implementation uses a single support function that branches based on the clock_id parameter:\nCLOCK_MONOTONIC: Uses _Thread_queue_Add_timeout_monotonic_timespec CLOCK_REALTIME: Uses _Thread_queue_Add_timeout_realtime_timespec This approach is cleaner and more direct than the condition variable implementation.\nThe Core RWLock Operation After setting up the timeout, the function performs the actual lock operation:\nstatus = _CORE_RWLock_Seize_for_reading( \u0026the_rwlock-\u003eRWLock, _Thread_Executing, \u0026queue_context ); Understanding _CORE_RWLock_Seize_for_reading This function is the heart of the reader lock acquisition logic. Let’s examine what it does:\nStatus_Control _CORE_RWLock_Seize_for_reading( CORE_RWLock_Control *the_rwlock, Thread_Control *executing, Thread_queue_Context *queue_context ) { Thread_Control *owner; owner = the_rwlock-\u003eOwner; if ( owner == NULL ) { /* No owner, we can acquire read lock */ return _CORE_RWLock_Grant_reading_lock( the_rwlock, executing, queue_context ); } if ( _CORE_RWLock_Is_reading( owner ) ) { /* Already held by readers, we can join */ return _CORE_RWLock_Grant_reading_lock( the_rwlock, executing, queue_context ); } /* Writer holds the lock or writers are waiting, we must block */ return _CORE_RWLock_Enqueue_for_reading( the_rwlock, executing, queue_context ); } Reader Lock Acquisition States The reader lock can be acquired immediately in two scenarios:\nNo Owner: The lock is completely free Reader Owned: The lock is already held by one or more readers In both cases, _CORE_RWLock_Grant_reading_lock is called:\nstatic Status_Control _CORE_RWLock_Grant_reading_lock( CORE_RWLock_Control *the_rwlock, Thread_Control *executing, Thread_queue_Context *queue_context ) { if ( the_rwlock-\u003eOwner == NULL ) { /* First reader */ the_rwlock-\u003eOwner = executing; the_rwlock-\u003enumber_of_readers = 1; } else { /* Additional reader */ the_rwlock-\u003enumber_of_readers++; } _Thread_queue_Context_clear_priority_updates( queue_context ); _Thread_queue_Release( \u0026the_rwlock-\u003eQueue, queue_context ); return STATUS_SUCCESSFUL; } This function:\nUpdates the reader count Sets the owner to the first reader (if no previous owner) Releases the queue and returns success Reader Lock Blocking If the lock is held by a writer or writers are waiting, the reader must block:\nstatic Status_Control _CORE_RWLock_Enqueue_for_reading( CORE_RWLock_Control *the_rwlock, Thread_Control *executing, Thread_queue_Context *queue_context ) { return _Thread_queue_Enqueue( \u0026the_rwlock-\u003eQueue.Queue, CORE_RWLOCK_TQ_OPERATIONS, executing, queue_context ); } This is where the timeout callbacks we set up earlier come into play. The thread is enqueued with the appropriate timeout mechanism.\nThe Core Logic: _POSIX_RWLock_Wrlock_support Now let’s examine the writer lock support function in rwlockwrlock.c:\nint _POSIX_RWLock_Wrlock_support( pthread_rwlock_t *rwlock, const struct timespec *abstime, clockid_t clock_id ) { POSIX_RWLock_Control *the_rwlock; Thread_queue_Context queue_context; Status_Control status; the_rwlock = _POSIX_RWLock_Get( rwlock ); POSIX_RWLOCK_VALIDATE_OBJECT( the_rwlock ); _Thread_queue_Context_initialize( \u0026queue_context ); if ( abstime != NULL ) { _Thread_queue_Context_set_timeout_argument( \u0026queue_context, abstime, true ); if ( clock_id == CLOCK_MONOTONIC ) { _Thread_queue_Context_set_enqueue_callout( \u0026queue_context, _Thread_queue_Add_timeout_monotonic_timespec ); } else if ( clock_id == CLOCK_REALTIME ) { _Thread_queue_Context_set_enqueue_callout( \u0026queue_context, _Thread_queue_Add_timeout_realtime_timespec ); } } status = _CORE_RWLock_Seize_for_writing( \u0026the_rwlock-\u003eRWLock, _Thread_Executing, \u0026queue_context ); return _POSIX_Get_error( status ); } The writer lock support function follows the same pattern as the reader version but calls _CORE_RWLock_Seize_for_writing instead.\nUnderstanding _CORE_RWLock_Seize_for_writing The writer lock acquisition logic is more restrictive:\nStatus_Control _CORE_RWLock_Seize_for_writing( CORE_RWLock_Control *the_rwlock, Thread_Control *executing, Thread_queue_Context *queue_context ) { Thread_Control *owner; owner = the_rwlock-\u003eOwner; if ( owner == NULL ) { /* No owner, we can acquire write lock */ return _CORE_RWLock_Grant_writing_lock( the_rwlock, executing, queue_context ); } /* Lock is held by someone, we must block */ return _CORE_RWLock_Enqueue_for_writing( the_rwlock, executing, queue_context ); } Writer Lock Acquisition States The writer lock can only be acquired in one scenario:\nNo Owner: The lock is completely free If there’s any owner (reader or writer), the writer must block.\nstatic Status_Control _CORE_RWLock_Grant_writing_lock( CORE_RWLock_Control *the_rwlock, Thread_Control *executing, Thread_queue_Context *queue_context ) { the_rwlock-\u003eOwner = executing; the_rwlock-\u003enumber_of_readers = 0; _Thread_queue_Context_clear_priority_updates( queue_context ); _Thread_queue_Release( \u0026the_rwlock-\u003eQueue, queue_context ); return STATUS_SUCCESSFUL; } This function:\nSets the owner to the writing thread Clears the reader count Releases the queue and returns success Understanding RWLock Timeout Behavior Just like with condition variables, the clock type affects timeout behavior:\nCLOCK_REALTIME Timeouts Wall Clock Time: Timeout is based on absolute calendar time Affected by Time Changes: System clock adjustments can extend or shorten timeouts Use Case: When you need timeouts based on absolute calendar time Example:\nstruct timespec timeout; clock_gettime(CLOCK_REALTIME, \u0026timeout); timeout.tv_sec += 5; // 5 seconds from now // Will timeout in 5 seconds of wall clock time pthread_rwlock_clockrdlock(\u0026rwlock, CLOCK_REALTIME, \u0026timeout); CLOCK_MONOTONIC Timeouts System Uptime: Timeout is based on monotonic system time Immune to Time Changes: System clock adjustments don’t affect it Use Case: When you need reliable relative timeouts Example:\nstruct timespec timeout; clock_gettime(CLOCK_MONOTONIC, \u0026timeout); timeout.tv_sec += 5; // 5 seconds from now // Will timeout in exactly 5 seconds regardless of system clock changes pthread_rwlock_clockrdlock(\u0026rwlock, CLOCK_MONOTONIC, \u0026timeout); Thread Queue Management and Priority RWLocks implement a sophisticated queuing system that handles both readers and writers:\nReader Priority Multiple readers can be granted the lock simultaneously New readers can join existing readers without blocking Readers block only when writers are active or waiting Writer Priority Writers get exclusive access Writers block when any owner exists (reader or writer) The queuing system ensures fairness between readers and writers Priority Inheritance The RWLock implementation supports priority inheritance to prevent priority inversion:\n#define CORE_RWLOCK_TQ_OPERATIONS \u0026_Thread_queue_Operations_priority_inherit This ensures that when a high-priority thread blocks on an RWLock, it can temporarily boost the priority of the lock holder.\nError Handling and Return Values Both functions use the same error handling pattern:\nreturn _POSIX_Get_error( status ); The _POSIX_Get_error function converts RTEMS internal status codes to POSIX error codes:\nSTATUS_SUCCESSFUL → 0 STATUS_TIMEOUT → ETIMEDOUT STATUS_UNAVAILABLE → EBUSY STATUS_OBJECT_WAS_DELETED → EINVAL STATUS_DEADLOCK → EDEADLK Comparison with Non-Clock Variants The clock-aware functions provide enhanced timeout control compared to their non-clock counterparts:\nTraditional Timed Functions // Uses clock from rwlock attributes (usually CLOCK_REALTIME) pthread_rwlock_timedrdlock(\u0026rwlock, \u0026timeout); pthread_rwlock_timedwrlock(\u0026rwlock, \u0026timeout); Clock-Aware Functions // Explicit clock selection pthread_rwlock_clockrdlock(\u0026rwlock, CLOCK_MONOTONIC, \u0026timeout); pthread_rwlock_clockwrlock(\u0026rwlock, CLOCK_REALTIME, \u0026timeout); Summary The pthread reader-writer lock clock functions in RTEMS demonstrate several key concepts:\nUnified Timeout Handling: Both reader and writer functions use the same timeout setup mechanism Clock-Specific Callbacks: Different timeout behaviors are handled through appropriate timeout functions Reader-Writer Semantics: Multiple readers can coexist, but writers need exclusive access Priority Inheritance: The implementation prevents priority inversion through priority inheritance Robust Error Handling: Comprehensive error code mapping from internal status to POSIX errors The Complete Flow Summary For Reader Lock: API Entry: pthread_rwlock_clockrdlock() validates parameters and delegates to support function Timeout Setup: Appropriate timeout callback is selected based on clock type Lock Attempt: Check if lock can be acquired immediately (no owner or readers-only) Grant or Block: Either grant the lock immediately or enqueue the thread with timeout Wakeup Processing: When awakened, error codes are converted and returned For Writer Lock: API Entry: pthread_rwlock_clockwrlock() validates parameters and delegates to support function Timeout Setup: Appropriate timeout callback is selected based on clock type Lock Attempt: Check if lock can be acquired immediately (no owner only) Grant or Block: Either grant exclusive access or enqueue the thread with timeout Wakeup Processing: When awakened, error codes are converted and returned This implementation showcases how RTEMS provides robust, real-time capable synchronization primitives while maintaining POSIX compliance and offering advanced features like configurable clock sources for timeout operations.\n",
-  "wordCount" : "1594",
-  "inLanguage": "en",
-  "datePublished": "2025-07-16T21:58:29+03:00",
-  "dateModified": "2025-07-16T21:58:29+03:00",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Mez3n's Blog",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://mez3n.github.io/mez3n.blog/favicon.ico"
-    }
-  }
-}
-</script>
+</noscript>
 </head>
 
 <body class="" id="top">
@@ -147,7 +76,7 @@ Reader-writer locks (RWLocks) are a powerful synchronization primitive that allo
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://mez3n.github.io/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
+            <a href="http://localhost:1313/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -566,18 +495,18 @@ Reader-writer locks (RWLocks) are a powerful synchronization primitive that allo
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://mez3n.github.io/mez3n.blog/tags/pthread/">Pthread</a></li>
-      <li><a href="https://mez3n.github.io/mez3n.blog/tags/rtems/">RTEMS</a></li>
-      <li><a href="https://mez3n.github.io/mez3n.blog/tags/synchronization/">Synchronization</a></li>
-      <li><a href="https://mez3n.github.io/mez3n.blog/tags/rwlock/">Rwlock</a></li>
-      <li><a href="https://mez3n.github.io/mez3n.blog/tags/internals/">Internals</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/pthread/">Pthread</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/rtems/">RTEMS</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/synchronization/">Synchronization</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/rwlock/">Rwlock</a></li>
+      <li><a href="http://localhost:1313/mez3n.blog/tags/internals/">Internals</a></li>
     </ul>
   </footer>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="https://mez3n.github.io/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:1313/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
 
     <span>
         Powered by

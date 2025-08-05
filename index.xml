@@ -2,17 +2,27 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Mez3n&#39;s Blog</title>
-    <link>https://mez3n.github.io/mez3n.blog/</link>
+    <link>http://localhost:1313/mez3n.blog/</link>
     <description>Recent content on Mez3n&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 16 Jul 2025 21:58:29 +0300</lastBuildDate>
-    <atom:link href="https://mez3n.github.io/mez3n.blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Aug 2025 18:46:59 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/mez3n.blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Exit Family: Understanding Program Termination in C</title>
+      <link>http://localhost:1313/mez3n.blog/posts/theexitfamily/</link>
+      <pubDate>Tue, 05 Aug 2025 18:46:59 +0300</pubDate>
+      <guid>http://localhost:1313/mez3n.blog/posts/theexitfamily/</guid>
+      <description>&lt;h1 id=&#34;the-exit-family-understanding-program-termination-in-c&#34;&gt;The Exit Family: Understanding Program Termination in C&lt;/h1&gt;
+&lt;p&gt;When a C program needs to terminate, there are several different functions available, each with distinct behaviors and use cases. Understanding the differences between &lt;code&gt;exit()&lt;/code&gt;, &lt;code&gt;_exit()&lt;/code&gt;, &lt;code&gt;_Exit()&lt;/code&gt;, &lt;code&gt;abort()&lt;/code&gt;, and &lt;code&gt;quick_exit()&lt;/code&gt; is crucial for writing robust system software and understanding how programs interact with the operating system.&lt;/p&gt;
+&lt;h2 id=&#34;the-standard-exit-function&#34;&gt;The Standard exit() Function&lt;/h2&gt;
+&lt;p&gt;The &lt;code&gt;exit()&lt;/code&gt; function is the most commonly used program termination function, defined in &lt;code&gt;&amp;lt;stdlib.h&amp;gt;&lt;/code&gt;. It performs a clean shutdown of the program by executing cleanup routines before terminating.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Pthread RWLock Internals: How Reader-Writer Lock Clock Functions Work</title>
-      <link>https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/</link>
+      <link>http://localhost:1313/mez3n.blog/posts/rwlocksinternals/</link>
       <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/</guid>
+      <guid>http://localhost:1313/mez3n.blog/posts/rwlocksinternals/</guid>
       <description>&lt;h1 id=&#34;understanding-pthread-reader-writer-lock-clock-functions-from-the-inside&#34;&gt;Understanding Pthread Reader-Writer Lock Clock Functions from the Inside&lt;/h1&gt;
 &lt;p&gt;In this blog post, we&amp;rsquo;ll explore how pthread reader-writer lock synchronization primitives work internally, focusing on the clock-aware variants. We&amp;rsquo;ll dive deep into the RTEMS implementation to understand how &lt;code&gt;pthread_rwlock_clockrdlock&lt;/code&gt; and &lt;code&gt;pthread_rwlock_clockwrlock&lt;/code&gt; work under the hood.&lt;/p&gt;
 &lt;h2 id=&#34;why-reader-writer-locks-with-clock-support&#34;&gt;Why Reader-Writer Locks with Clock Support?&lt;/h2&gt;
@@ -20,9 +30,9 @@
     </item>
     <item>
       <title>GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS</title>
-      <link>https://mez3n.github.io/mez3n.blog/posts/midtermeval/</link>
+      <link>http://localhost:1313/mez3n.blog/posts/midtermeval/</link>
       <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/posts/midtermeval/</guid>
+      <guid>http://localhost:1313/mez3n.blog/posts/midtermeval/</guid>
       <description>&lt;h1 id=&#34;gsoc-2025-midterm-evaluation-implementing-posix-issue-8-functions-in-rtems&#34;&gt;GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS&lt;/h1&gt;
 &lt;p&gt;As I reach the midpoint of my Google Summer of Code 2025 journey with RTEMS, I&amp;rsquo;m excited to share the progress I&amp;rsquo;ve made on implementing POSIX Issue 8 functions. This project aims to enhance RTEMS&amp;rsquo; POSIX compliance by adding support for new functions introduced in the latest POSIX standard.&lt;/p&gt;
 &lt;h2 id=&#34;project-overview&#34;&gt;Project Overview&lt;/h2&gt;
@@ -30,9 +40,9 @@
     </item>
     <item>
       <title>Pthread Internals: How Condition Variables Work</title>
-      <link>https://mez3n.github.io/mez3n.blog/posts/pthreadinternals/</link>
+      <link>http://localhost:1313/mez3n.blog/posts/pthreadinternals/</link>
       <pubDate>Sun, 06 Jul 2025 01:10:41 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/posts/pthreadinternals/</guid>
+      <guid>http://localhost:1313/mez3n.blog/posts/pthreadinternals/</guid>
       <description>&lt;h1 id=&#34;understanding-pthread-condition-variables-from-the-inside&#34;&gt;Understanding Pthread Condition Variables from the Inside&lt;/h1&gt;
 &lt;p&gt;In this blog post, we&amp;rsquo;ll explore how pthread synchronization primitives work internally, focusing on condition variables. We&amp;rsquo;ll dive deep into the RTEMS implementation to understand how &lt;code&gt;pthread_cond_wait&lt;/code&gt;, &lt;code&gt;pthread_cond_timedwait&lt;/code&gt;, and &lt;code&gt;pthread_cond_clockwait&lt;/code&gt; work under the hood.&lt;/p&gt;
 &lt;h2 id=&#34;why-start-with-pthread_cond_clockwait&#34;&gt;Why Start with pthread_cond_clockwait?&lt;/h2&gt;
@@ -40,9 +50,9 @@
     </item>
     <item>
       <title>POSIX Threads: Thread Queues and Synchronization Internals</title>
-      <link>https://mez3n.github.io/mez3n.blog/posts/theworldofpthread/</link>
+      <link>http://localhost:1313/mez3n.blog/posts/theworldofpthread/</link>
       <pubDate>Tue, 24 Jun 2025 18:27:51 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/posts/theworldofpthread/</guid>
+      <guid>http://localhost:1313/mez3n.blog/posts/theworldofpthread/</guid>
       <description>&lt;h1 id=&#34;what-really-happens-when-you-call-pthread_mutex_lock&#34;&gt;What Really Happens When You Call pthread_mutex_lock()?&lt;/h1&gt;
 &lt;p&gt;When you write a multithreaded program and call &lt;code&gt;pthread_mutex_lock()&lt;/code&gt;, the operation either succeeds immediately or blocks your thread until the resource becomes available. While this appears straightforward from an API perspective, the underlying implementation involves sophisticated thread queues, priority management, and scheduling algorithms that remain hidden from most developers.&lt;/p&gt;
 &lt;h2 id=&#34;pthreads-the-foundation-of-portable-threading&#34;&gt;Pthreads: The Foundation of Portable Threading&lt;/h2&gt;
@@ -50,9 +60,9 @@
     </item>
     <item>
       <title>Submitting Patches To Newlib</title>
-      <link>https://mez3n.github.io/mez3n.blog/posts/makingpatchestonewlib/</link>
+      <link>http://localhost:1313/mez3n.blog/posts/makingpatchestonewlib/</link>
       <pubDate>Tue, 17 Jun 2025 16:12:01 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/posts/makingpatchestonewlib/</guid>
+      <guid>http://localhost:1313/mez3n.blog/posts/makingpatchestonewlib/</guid>
       <description>&lt;h1 id=&#34;contributing-to-newlib-a-step-by-step-guide&#34;&gt;Contributing to Newlib: A Step-by-Step Guide&lt;/h1&gt;
 &lt;p&gt;If you&amp;rsquo;re interested in contributing to Newlib, the C standard library used by many embedded systems (including RTEMS and Cygwin), this guide will walk you through the process of submitting patches.&lt;/p&gt;
 &lt;h2 id=&#34;what-is-newlib&#34;&gt;What is Newlib?&lt;/h2&gt;
@@ -63,9 +73,9 @@
     </item>
     <item>
       <title>New APIs Added to POSIX Standard (Issue 8): A Comprehensive Implementation Guide</title>
-      <link>https://mez3n.github.io/mez3n.blog/posts/newposixapis/</link>
+      <link>http://localhost:1313/mez3n.blog/posts/newposixapis/</link>
       <pubDate>Sun, 01 Jun 2025 21:06:56 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/posts/newposixapis/</guid>
+      <guid>http://localhost:1313/mez3n.blog/posts/newposixapis/</guid>
       <description>&lt;p&gt;The POSIX Standard Issue 8, released in 2024, represents a significant milestone in operating system standardization, introducing essential APIs that enhance portability, functionality, and compliance across Unix-like systems. As part of my Google Summer of Code 2025 project with RTEMS.&lt;/p&gt;
 &lt;h2 id=&#34;project-overview-bridging-the-posix-gap-in-rtems&#34;&gt;Project Overview: Bridging the POSIX Gap in RTEMS&lt;/h2&gt;
 &lt;p&gt;RTEMS, known for its reliability in mission-critical applications in space exploration currently lacks support for several key APIs introduced in POSIX Issue 8. This project aims to analyze, implement, and thoroughly test these missing APIs.&lt;/p&gt;</description>
