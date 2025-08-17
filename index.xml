@@ -6,8 +6,18 @@
     <description>Recent content on Mez3n&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 05 Aug 2025 18:46:59 +0300</lastBuildDate>
+    <lastBuildDate>Sun, 17 Aug 2025 22:01:40 +0300</lastBuildDate>
     <atom:link href="https://mez3n.github.io/mez3n.blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Time APIs in C: A Deep Dive into timespec_get() and Modern Time Retrieval Methods</title>
+      <link>https://mez3n.github.io/mez3n.blog/posts/gettime/</link>
+      <pubDate>Sun, 17 Aug 2025 22:01:40 +0300</pubDate>
+      <guid>https://mez3n.github.io/mez3n.blog/posts/gettime/</guid>
+      <description>&lt;h1 id=&#34;time-apis-in-c-from-time-to-timespec_get&#34;&gt;Time APIs in C: From time() to timespec_get()&lt;/h1&gt;
+&lt;p&gt;Time measurement in computing has evolved from simple second-based timestamps to high-precision APIs. This guide covers the main time functions available in C, focusing on &lt;code&gt;timespec_get()&lt;/code&gt; - a C11 standard function and its implementation in real-time systems.&lt;/p&gt;
+&lt;h2 id=&#34;why-multiple-time-apis&#34;&gt;Why Multiple Time APIs?&lt;/h2&gt;
+&lt;p&gt;Time measurement serves different purposes: file timestamps, process scheduling, timeouts, performance measurement, and real-time applications. Each use case has different precision and reliability requirements, leading to multiple APIs optimized for specific needs.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>The Exit Family: Understanding Program Termination in C</title>
       <link>https://mez3n.github.io/mez3n.blog/posts/theexitfamily/</link>

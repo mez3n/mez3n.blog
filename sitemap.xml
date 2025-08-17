@@ -3,33 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://mez3n.github.io/mez3n.blog/tags/c/</loc>
-    <lastmod>2025-08-05T18:46:59+03:00</lastmod>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/categories/</loc>
-    <lastmod>2025-08-05T18:46:59+03:00</lastmod>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/categories/development/</loc>
-    <lastmod>2025-08-05T18:46:59+03:00</lastmod>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/</loc>
-    <lastmod>2025-08-05T18:46:59+03:00</lastmod>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/tags/posix/</loc>
-    <lastmod>2025-08-05T18:46:59+03:00</lastmod>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/posts/</loc>
-    <lastmod>2025-08-05T18:46:59+03:00</lastmod>
-  </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/tags/process-management/</loc>
-    <lastmod>2025-08-05T18:46:59+03:00</lastmod>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/tags/programming/</loc>
-    <lastmod>2025-08-05T18:46:59+03:00</lastmod>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/rtems/</loc>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/tags/system-calls/</loc>
-    <lastmod>2025-08-05T18:46:59+03:00</lastmod>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/categories/systems-programming/</loc>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/tags/</loc>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/posts/gettime/</loc>
+    <lastmod>2025-08-17T22:01:40+03:00</lastmod>
+  </url><url>
+    <loc>https://mez3n.github.io/mez3n.blog/tags/process-management/</loc>
     <lastmod>2025-08-05T18:46:59+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/posts/theexitfamily/</loc>
@@ -44,16 +53,10 @@
     <loc>https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/</loc>
     <lastmod>2025-07-16T21:58:29+03:00</lastmod>
   </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/tags/rtems/</loc>
-    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
-  </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/tags/rwlock/</loc>
     <lastmod>2025-07-16T21:58:29+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/tags/synchronization/</loc>
-    <lastmod>2025-07-16T21:58:29+03:00</lastmod>
-  </url><url>
-    <loc>https://mez3n.github.io/mez3n.blog/categories/systems-programming/</loc>
     <lastmod>2025-07-16T21:58:29+03:00</lastmod>
   </url><url>
     <loc>https://mez3n.github.io/mez3n.blog/tags/gsoc/</loc>

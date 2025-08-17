@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Time APIs in C: A Deep Dive into timespec_get() and Modern Time Retrieval Methods | Mez3n&#39;s Blog</title>
+<meta name="keywords" content="programming, posix, rtems, system-calls, c">
+<meta name="description" content="Time APIs in C: From time() to timespec_get()
+Time measurement in computing has evolved from simple second-based timestamps to high-precision APIs. This guide covers the main time functions available in C, focusing on timespec_get() - a C11 standard function and its implementation in real-time systems.
+Why Multiple Time APIs?
+Time measurement serves different purposes: file timestamps, process scheduling, timeouts, performance measurement, and real-time applications. Each use case has different precision and reliability requirements, leading to multiple APIs optimized for specific needs.">
+<meta name="author" content="">
+<link rel="canonical" href="https://mez3n.github.io/mez3n.blog/posts/gettime/">
+<link crossorigin="anonymous" href="/mez3n.blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://mez3n.github.io/mez3n.blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://mez3n.github.io/mez3n.blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://mez3n.github.io/mez3n.blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://mez3n.github.io/mez3n.blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://mez3n.github.io/mez3n.blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://mez3n.github.io/mez3n.blog/posts/gettime/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:url" content="https://mez3n.github.io/mez3n.blog/posts/gettime/">
+  <meta property="og:site_name" content="Mez3n&#39;s Blog">
+  <meta property="og:title" content="Time APIs in C: A Deep Dive into timespec_get() and Modern Time Retrieval Methods">
+  <meta property="og:description" content="Time APIs in C: From time() to timespec_get() Time measurement in computing has evolved from simple second-based timestamps to high-precision APIs. This guide covers the main time functions available in C, focusing on timespec_get() - a C11 standard function and its implementation in real-time systems.
+Why Multiple Time APIs? Time measurement serves different purposes: file timestamps, process scheduling, timeouts, performance measurement, and real-time applications. Each use case has different precision and reliability requirements, leading to multiple APIs optimized for specific needs.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-17T22:01:40+03:00">
+    <meta property="article:modified_time" content="2025-08-17T22:01:40+03:00">
+    <meta property="article:tag" content="Programming">
+    <meta property="article:tag" content="Posix">
+    <meta property="article:tag" content="RTEMS">
+    <meta property="article:tag" content="System-Calls">
+    <meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Time APIs in C: A Deep Dive into timespec_get() and Modern Time Retrieval Methods">
+<meta name="twitter:description" content="Time APIs in C: From time() to timespec_get()
+Time measurement in computing has evolved from simple second-based timestamps to high-precision APIs. This guide covers the main time functions available in C, focusing on timespec_get() - a C11 standard function and its implementation in real-time systems.
+Why Multiple Time APIs?
+Time measurement serves different purposes: file timestamps, process scheduling, timeouts, performance measurement, and real-time applications. Each use case has different precision and reliability requirements, leading to multiple APIs optimized for specific needs.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://mez3n.github.io/mez3n.blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Time APIs in C: A Deep Dive into timespec_get() and Modern Time Retrieval Methods",
+      "item": "https://mez3n.github.io/mez3n.blog/posts/gettime/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Time APIs in C: A Deep Dive into timespec_get() and Modern Time Retrieval Methods",
+  "name": "Time APIs in C: A Deep Dive into timespec_get() and Modern Time Retrieval Methods",
+  "description": "Time APIs in C: From time() to timespec_get() Time measurement in computing has evolved from simple second-based timestamps to high-precision APIs. This guide covers the main time functions available in C, focusing on timespec_get() - a C11 standard function and its implementation in real-time systems.\nWhy Multiple Time APIs? Time measurement serves different purposes: file timestamps, process scheduling, timeouts, performance measurement, and real-time applications. Each use case has different precision and reliability requirements, leading to multiple APIs optimized for specific needs.\n",
+  "keywords": [
+    "programming", "posix", "rtems", "system-calls", "c"
+  ],
+  "articleBody": "Time APIs in C: From time() to timespec_get() Time measurement in computing has evolved from simple second-based timestamps to high-precision APIs. This guide covers the main time functions available in C, focusing on timespec_get() - a C11 standard function and its implementation in real-time systems.\nWhy Multiple Time APIs? Time measurement serves different purposes: file timestamps, process scheduling, timeouts, performance measurement, and real-time applications. Each use case has different precision and reliability requirements, leading to multiple APIs optimized for specific needs.\nCore Time APIs time() - The Basic Function The time() function is the simplest way to get current time:\n#include time_t current_time = time(NULL); printf(\"Seconds since epoch: %ld\\n\", current_time); Properties:\nPrecision: Seconds only Standard: C89 Return Type: time_t Use Cases: Basic timestamps, file times Limitations:\nNo sub-second precision Limited to UTC time Y2038 problem on 32-bit systems gettimeofday() - Microsecond Precision POSIX added gettimeofday() for better precision:\n#include struct timeval tv; gettimeofday(\u0026tv, NULL); printf(\"Seconds: %ld, Microseconds: %ld\\n\", tv.tv_sec, tv.tv_usec); Properties:\nPrecision: Microseconds (10^-6 seconds) Standard: POSIX (deprecated in POSIX.1-2008) Structure: struct timeval Timezone Support: Optional timezone parameter Improvements:\nMicrosecond precision Timezone awareness Limitations:\nDeprecated in favor of clock_gettime() Platform-specific timezone handling Not monotonic (can go backwards) clock_gettime() - The Current Standard clock_gettime() is the modern standard for time retrieval:\n#include struct timespec ts; clock_gettime(CLOCK_REALTIME, \u0026ts); printf(\"Seconds: %ld, Nanoseconds: %ld\\n\", ts.tv_sec, ts.tv_nsec); Clock Types:\nCLOCK_REALTIME: Wall clock time (can be adjusted) CLOCK_MONOTONIC: Monotonic time (unaffected by clock adjustments) CLOCK_PROCESS_CPUTIME_ID: Process CPU time CLOCK_THREAD_CPUTIME_ID: Thread CPU time Properties:\nPrecision: Nanoseconds (10^-9 seconds) Standard: POSIX.1-2001 Structure: struct timespec Multiple Clock Sources: Different clock types available timespec_get(): The C11 Standard Function What is timespec_get()? C11 introduced timespec_get() as a portable, high-precision time function that works without POSIX extensions:\n#include struct timespec ts; int result = timespec_get(\u0026ts, TIME_UTC); if (result == TIME_UTC) { printf(\"Current time: %ld.%09ld seconds since epoch\\n\", ts.tv_sec, ts.tv_nsec); } Why timespec_get()? timespec_get() addresses several issues:\nStandard Library: Part of ISO C standard, not just POSIX Portability: Works on both POSIX and non-POSIX systems Precision: Nanosecond precision like clock_gettime() Simplicity: Single time base (UTC) reduces complexity Function Signature and Usage int timespec_get(struct timespec *ts, int base); Parameters:\nts: Pointer to struct timespec to store the result base: Time base specification (currently only TIME_UTC) Return Value:\nReturns base on success Returns 0 on failure Implementation: RTEMS Integration The timespec_get() implementation in RTEMS shows how standard library functions work with system calls. Here’s the implementation:\n/* From cpukit/posix/src/timespecget.c */ int timespec_get(struct timespec *ts, int base) { if( !ts ){ return 0; } if ( base != TIME_UTC ) { return 0; } _TOD_Get(ts); return base; } How It Works The implementation is straightforward:\nNull Check: Verify the ts parameter is valid Base Check: Only TIME_UTC is supported (per C11 standard) Get Time: Use RTEMS’ _TOD_Get() function Return: Return the base parameter on success, 0 on failure RTEMS Time Infrastructure The implementation uses RTEMS’ time system:\n// _TOD_Get() is implemented as: static inline void _TOD_Get(struct timespec *tod) { _Timecounter_Nanotime(tod); } This provides:\nHardware Abstraction: Works across different hardware Nanosecond Precision: Native nanosecond resolution Real-time Guarantees: Deterministic behavior for real-time systems The timespec Structure All modern high-precision time APIs use the struct timespec:\nstruct timespec { time_t tv_sec; // Seconds since epoch long tv_nsec; // Nanoseconds (0-999,999,999) }; This structure provides:\nRange: Same as time_t for seconds Precision: Nanosecond granularity Comparing Time APIs Precision Comparison Function Precision Standard Monotonic Option time() 1 second C89 No gettimeofday() 1 microsecond POSIX (deprecated) No clock_gettime() 1 nanosecond POSIX Yes timespec_get() 1 nanosecond C11 No Choosing the Right API Use Cases For Basic Timestamps:\n// Simple logging time_t now = time(NULL); printf(\"Log entry at %s\", ctime(\u0026now)); For High-Precision Measurements:\n// Performance measurement struct timespec start, end; timespec_get(\u0026start, TIME_UTC); expensive_operation(); timespec_get(\u0026end, TIME_UTC); long duration_ns = (end.tv_sec - start.tv_sec) * 1000000000L + (end.tv_nsec - start.tv_nsec); For Monotonic Timing (POSIX systems):\n// Timeout implementation struct timespec timeout_start; clock_gettime(CLOCK_MONOTONIC, \u0026timeout_start); while (!condition_met()) { struct timespec now; clock_gettime(CLOCK_MONOTONIC, \u0026now); if ((now.tv_sec - timeout_start.tv_sec) \u003e TIMEOUT_SECONDS) { return TIMEOUT_ERROR; } // Continue waiting... } For Portable High-Precision Code:\n// Cross-platform timing #ifdef __STDC_VERSION__ \u003e= 201112L struct timespec ts; if (timespec_get(\u0026ts, TIME_UTC) == TIME_UTC) { // Use high-precision time } #else // Fallback to time() time_t t = time(NULL); #endif Implementation Notes Handling Clock Changes System clock adjustments can cause timing issues:\n// Robust timeout implementation int wait_with_timeout(int timeout_ms) { struct timespec deadline; timespec_get(\u0026deadline, TIME_UTC); // Add timeout to current time deadline.tv_sec += timeout_ms / 1000; deadline.tv_nsec += (timeout_ms % 1000) * 1000000; // Handle nanosecond overflow if (deadline.tv_nsec \u003e= 1000000000) { deadline.tv_sec++; deadline.tv_nsec -= 1000000000; } while (!condition_ready()) { struct timespec now; timespec_get(\u0026now, TIME_UTC); // Check if deadline passed if (now.tv_sec \u003e deadline.tv_sec || (now.tv_sec == deadline.tv_sec \u0026\u0026 now.tv_nsec \u003e= deadline.tv_nsec)) { return TIMEOUT; } usleep(1000); // Sleep 1ms } return SUCCESS; } Conclusion The evolution from time() to timespec_get() reflects growing precision requirements in modern computing. While clock_gettime() remains preferred on POSIX systems due to its flexibility, timespec_get() provides a portable solution for high-precision applications.\nChoose based on your requirements:\nPortability: Choose timespec_get() for cross-platform code Precision: Both timespec_get() and clock_gettime() provide nanosecond precision Monotonic Guarantees: Use clock_gettime(CLOCK_MONOTONIC) for timing measurements Simplicity: Use time() for basic timestamp needs ",
+  "wordCount" : "867",
+  "inLanguage": "en",
+  "datePublished": "2025-08-17T22:01:40+03:00",
+  "dateModified": "2025-08-17T22:01:40+03:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mez3n.github.io/mez3n.blog/posts/gettime/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mez3n's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://mez3n.github.io/mez3n.blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://mez3n.github.io/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Time APIs in C: A Deep Dive into timespec_get() and Modern Time Retrieval Methods
+    </h1>
+    <div class="post-meta"><span title='2025-08-17 22:01:40 +0300 EEST'>August 17, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="time-apis-in-c-from-time-to-timespec_get">Time APIs in C: From time() to timespec_get()<a hidden class="anchor" aria-hidden="true" href="#time-apis-in-c-from-time-to-timespec_get">#</a></h1>
+<p>Time measurement in computing has evolved from simple second-based timestamps to high-precision APIs. This guide covers the main time functions available in C, focusing on <code>timespec_get()</code> - a C11 standard function and its implementation in real-time systems.</p>
+<h2 id="why-multiple-time-apis">Why Multiple Time APIs?<a hidden class="anchor" aria-hidden="true" href="#why-multiple-time-apis">#</a></h2>
+<p>Time measurement serves different purposes: file timestamps, process scheduling, timeouts, performance measurement, and real-time applications. Each use case has different precision and reliability requirements, leading to multiple APIs optimized for specific needs.</p>
+<h2 id="core-time-apis">Core Time APIs<a hidden class="anchor" aria-hidden="true" href="#core-time-apis">#</a></h2>
+<h3 id="time---the-basic-function">time() - The Basic Function<a hidden class="anchor" aria-hidden="true" href="#time---the-basic-function">#</a></h3>
+<p>The <code>time()</code> function is the simplest way to get current time:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;time.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">time_t</span> current_time <span style="color:#f92672">=</span> <span style="color:#a6e22e">time</span>(NULL);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Seconds since epoch: %ld</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, current_time);
+</span></span></code></pre></div><p><strong>Properties:</strong></p>
+<ul>
+<li><strong>Precision</strong>: Seconds only</li>
+<li><strong>Standard</strong>: C89</li>
+<li><strong>Return Type</strong>: <code>time_t</code></li>
+<li><strong>Use Cases</strong>: Basic timestamps, file times</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>No sub-second precision</li>
+<li>Limited to UTC time</li>
+<li>Y2038 problem on 32-bit systems</li>
+</ul>
+<h3 id="gettimeofday---microsecond-precision">gettimeofday() - Microsecond Precision<a hidden class="anchor" aria-hidden="true" href="#gettimeofday---microsecond-precision">#</a></h3>
+<p>POSIX added <code>gettimeofday()</code> for better precision:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/time.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> timeval tv;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">gettimeofday</span>(<span style="color:#f92672">&amp;</span>tv, NULL);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Seconds: %ld, Microseconds: %ld</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, 
+</span></span><span style="display:flex;"><span>       tv.tv_sec, tv.tv_usec);
+</span></span></code></pre></div><p><strong>Properties:</strong></p>
+<ul>
+<li><strong>Precision</strong>: Microseconds (10^-6 seconds)</li>
+<li><strong>Standard</strong>: POSIX (deprecated in POSIX.1-2008)</li>
+<li><strong>Structure</strong>: <code>struct timeval</code></li>
+<li><strong>Timezone Support</strong>: Optional timezone parameter</li>
+</ul>
+<p><strong>Improvements:</strong></p>
+<ul>
+<li>Microsecond precision</li>
+<li>Timezone awareness</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>Deprecated in favor of clock_gettime()</li>
+<li>Platform-specific timezone handling</li>
+<li>Not monotonic (can go backwards)</li>
+</ul>
+<h3 id="clock_gettime---the-current-standard">clock_gettime() - The Current Standard<a hidden class="anchor" aria-hidden="true" href="#clock_gettime---the-current-standard">#</a></h3>
+<p><code>clock_gettime()</code> is the modern standard for time retrieval:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;time.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> timespec ts;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">clock_gettime</span>(CLOCK_REALTIME, <span style="color:#f92672">&amp;</span>ts);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Seconds: %ld, Nanoseconds: %ld</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, 
+</span></span><span style="display:flex;"><span>       ts.tv_sec, ts.tv_nsec);
+</span></span></code></pre></div><p><strong>Clock Types:</strong></p>
+<ul>
+<li><code>CLOCK_REALTIME</code>: Wall clock time (can be adjusted)</li>
+<li><code>CLOCK_MONOTONIC</code>: Monotonic time (unaffected by clock adjustments)</li>
+<li><code>CLOCK_PROCESS_CPUTIME_ID</code>: Process CPU time</li>
+<li><code>CLOCK_THREAD_CPUTIME_ID</code>: Thread CPU time</li>
+</ul>
+<p><strong>Properties:</strong></p>
+<ul>
+<li><strong>Precision</strong>: Nanoseconds (10^-9 seconds)</li>
+<li><strong>Standard</strong>: POSIX.1-2001</li>
+<li><strong>Structure</strong>: <code>struct timespec</code></li>
+<li><strong>Multiple Clock Sources</strong>: Different clock types available</li>
+</ul>
+<h2 id="timespec_get-the-c11-standard-function">timespec_get(): The C11 Standard Function<a hidden class="anchor" aria-hidden="true" href="#timespec_get-the-c11-standard-function">#</a></h2>
+<h3 id="what-is-timespec_get">What is timespec_get()?<a hidden class="anchor" aria-hidden="true" href="#what-is-timespec_get">#</a></h3>
+<p>C11 introduced <code>timespec_get()</code> as a portable, high-precision time function that works without POSIX extensions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;time.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> timespec ts;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> result <span style="color:#f92672">=</span> <span style="color:#a6e22e">timespec_get</span>(<span style="color:#f92672">&amp;</span>ts, TIME_UTC);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (result <span style="color:#f92672">==</span> TIME_UTC) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Current time: %ld.%09ld seconds since epoch</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, 
+</span></span><span style="display:flex;"><span>           ts.tv_sec, ts.tv_nsec);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="why-timespec_get">Why timespec_get()?<a hidden class="anchor" aria-hidden="true" href="#why-timespec_get">#</a></h3>
+<p><code>timespec_get()</code> addresses several issues:</p>
+<ol>
+<li><strong>Standard Library</strong>: Part of ISO C standard, not just POSIX</li>
+<li><strong>Portability</strong>: Works on both POSIX and non-POSIX systems</li>
+<li><strong>Precision</strong>: Nanosecond precision like <code>clock_gettime()</code></li>
+<li><strong>Simplicity</strong>: Single time base (UTC) reduces complexity</li>
+</ol>
+<h3 id="function-signature-and-usage">Function Signature and Usage<a hidden class="anchor" aria-hidden="true" href="#function-signature-and-usage">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">timespec_get</span>(<span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>ts, <span style="color:#66d9ef">int</span> base);
+</span></span></code></pre></div><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>ts</code>: Pointer to <code>struct timespec</code> to store the result</li>
+<li><code>base</code>: Time base specification (currently only <code>TIME_UTC</code>)</li>
+</ul>
+<p><strong>Return Value:</strong></p>
+<ul>
+<li>Returns <code>base</code> on success</li>
+<li>Returns 0 on failure</li>
+</ul>
+<h3 id="implementation-rtems-integration">Implementation: RTEMS Integration<a hidden class="anchor" aria-hidden="true" href="#implementation-rtems-integration">#</a></h3>
+<p>The <code>timespec_get()</code> implementation in RTEMS shows how standard library functions work with system calls. Here&rsquo;s the implementation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">/* From cpukit/posix/src/timespecget.c */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">timespec_get</span>(<span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>ts, <span style="color:#66d9ef">int</span> base)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span>( <span style="color:#f92672">!</span>ts ){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( base  <span style="color:#f92672">!=</span> TIME_UTC ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_TOD_Get</span>(ts);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> base;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="how-it-works">How It Works<a hidden class="anchor" aria-hidden="true" href="#how-it-works">#</a></h3>
+<p>The implementation is straightforward:</p>
+<ol>
+<li><strong>Null Check</strong>: Verify the <code>ts</code> parameter is valid</li>
+<li><strong>Base Check</strong>: Only <code>TIME_UTC</code> is supported (per C11 standard)</li>
+<li><strong>Get Time</strong>: Use RTEMS&rsquo; <code>_TOD_Get()</code> function</li>
+<li><strong>Return</strong>: Return the base parameter on success, 0 on failure</li>
+</ol>
+<h3 id="rtems-time-infrastructure">RTEMS Time Infrastructure<a hidden class="anchor" aria-hidden="true" href="#rtems-time-infrastructure">#</a></h3>
+<p>The implementation uses RTEMS&rsquo; time system:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// _TOD_Get() is implemented as:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">_TOD_Get</span>(<span style="color:#66d9ef">struct</span> timespec <span style="color:#f92672">*</span>tod)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_Timecounter_Nanotime</span>(tod);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This provides:</p>
+<ul>
+<li><strong>Hardware Abstraction</strong>: Works across different hardware</li>
+<li><strong>Nanosecond Precision</strong>: Native nanosecond resolution</li>
+<li><strong>Real-time Guarantees</strong>: Deterministic behavior for real-time systems</li>
+</ul>
+<h3 id="the-timespec-structure">The timespec Structure<a hidden class="anchor" aria-hidden="true" href="#the-timespec-structure">#</a></h3>
+<p>All modern high-precision time APIs use the <code>struct timespec</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> timespec {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">time_t</span> tv_sec;  <span style="color:#75715e">// Seconds since epoch
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> tv_nsec;   <span style="color:#75715e">// Nanoseconds (0-999,999,999)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><p>This structure provides:</p>
+<ul>
+<li><strong>Range</strong>: Same as <code>time_t</code> for seconds</li>
+<li><strong>Precision</strong>: Nanosecond granularity</li>
+</ul>
+<h2 id="comparing-time-apis">Comparing Time APIs<a hidden class="anchor" aria-hidden="true" href="#comparing-time-apis">#</a></h2>
+<h3 id="precision-comparison">Precision Comparison<a hidden class="anchor" aria-hidden="true" href="#precision-comparison">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Function</th>
+          <th>Precision</th>
+          <th>Standard</th>
+          <th>Monotonic Option</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>time()</code></td>
+          <td>1 second</td>
+          <td>C89</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td><code>gettimeofday()</code></td>
+          <td>1 microsecond</td>
+          <td>POSIX (deprecated)</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td><code>clock_gettime()</code></td>
+          <td>1 nanosecond</td>
+          <td>POSIX</td>
+          <td>Yes</td>
+      </tr>
+      <tr>
+          <td><code>timespec_get()</code></td>
+          <td>1 nanosecond</td>
+          <td>C11</td>
+          <td>No</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="choosing-the-right-api">Choosing the Right API<a hidden class="anchor" aria-hidden="true" href="#choosing-the-right-api">#</a></h2>
+<h3 id="use-cases">Use Cases<a hidden class="anchor" aria-hidden="true" href="#use-cases">#</a></h3>
+<p><strong>For Basic Timestamps:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// Simple logging
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">time_t</span> now <span style="color:#f92672">=</span> <span style="color:#a6e22e">time</span>(NULL);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Log entry at %s&#34;</span>, <span style="color:#a6e22e">ctime</span>(<span style="color:#f92672">&amp;</span>now));
+</span></span></code></pre></div><p><strong>For High-Precision Measurements:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// Performance measurement
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> timespec start, end;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">timespec_get</span>(<span style="color:#f92672">&amp;</span>start, TIME_UTC);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">expensive_operation</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">timespec_get</span>(<span style="color:#f92672">&amp;</span>end, TIME_UTC);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">long</span> duration_ns <span style="color:#f92672">=</span> (end.tv_sec <span style="color:#f92672">-</span> start.tv_sec) <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000000000L</span> <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>                   (end.tv_nsec <span style="color:#f92672">-</span> start.tv_nsec);
+</span></span></code></pre></div><p><strong>For Monotonic Timing (POSIX systems):</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// Timeout implementation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> timespec timeout_start;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">clock_gettime</span>(CLOCK_MONOTONIC, <span style="color:#f92672">&amp;</span>timeout_start);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">condition_met</span>()) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> timespec now;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">clock_gettime</span>(CLOCK_MONOTONIC, <span style="color:#f92672">&amp;</span>now);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((now.tv_sec <span style="color:#f92672">-</span> timeout_start.tv_sec) <span style="color:#f92672">&gt;</span> TIMEOUT_SECONDS) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> TIMEOUT_ERROR;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Continue waiting...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p><strong>For Portable High-Precision Code:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// Cross-platform timing
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#ifdef __STDC_VERSION__ &gt;= 201112L
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> timespec ts;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">timespec_get</span>(<span style="color:#f92672">&amp;</span>ts, TIME_UTC) <span style="color:#f92672">==</span> TIME_UTC) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Use high-precision time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// Fallback to time()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">time_t</span> t <span style="color:#f92672">=</span> <span style="color:#a6e22e">time</span>(NULL);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span></code></pre></div><h2 id="implementation-notes">Implementation Notes<a hidden class="anchor" aria-hidden="true" href="#implementation-notes">#</a></h2>
+<h3 id="handling-clock-changes">Handling Clock Changes<a hidden class="anchor" aria-hidden="true" href="#handling-clock-changes">#</a></h3>
+<p>System clock adjustments can cause timing issues:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// Robust timeout implementation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">wait_with_timeout</span>(<span style="color:#66d9ef">int</span> timeout_ms) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> timespec deadline;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">timespec_get</span>(<span style="color:#f92672">&amp;</span>deadline, TIME_UTC);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Add timeout to current time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    deadline.tv_sec <span style="color:#f92672">+=</span> timeout_ms <span style="color:#f92672">/</span> <span style="color:#ae81ff">1000</span>;
+</span></span><span style="display:flex;"><span>    deadline.tv_nsec <span style="color:#f92672">+=</span> (timeout_ms <span style="color:#f92672">%</span> <span style="color:#ae81ff">1000</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000000</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Handle nanosecond overflow
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (deadline.tv_nsec <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1000000000</span>) {
+</span></span><span style="display:flex;"><span>        deadline.tv_sec<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        deadline.tv_nsec <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1000000000</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">condition_ready</span>()) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">struct</span> timespec now;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">timespec_get</span>(<span style="color:#f92672">&amp;</span>now, TIME_UTC);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Check if deadline passed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (now.tv_sec <span style="color:#f92672">&gt;</span> deadline.tv_sec <span style="color:#f92672">||</span>
+</span></span><span style="display:flex;"><span>            (now.tv_sec <span style="color:#f92672">==</span> deadline.tv_sec <span style="color:#f92672">&amp;&amp;</span> now.tv_nsec <span style="color:#f92672">&gt;=</span> deadline.tv_nsec)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> TIMEOUT;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">usleep</span>(<span style="color:#ae81ff">1000</span>); <span style="color:#75715e">// Sleep 1ms
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> SUCCESS;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>The evolution from <code>time()</code> to <code>timespec_get()</code> reflects growing precision requirements in modern computing. While <code>clock_gettime()</code> remains preferred on POSIX systems due to its flexibility, <code>timespec_get()</code> provides a portable solution for high-precision applications.</p>
+<p>Choose based on your requirements:</p>
+<ul>
+<li><strong>Portability</strong>: Choose <code>timespec_get()</code> for cross-platform code</li>
+<li><strong>Precision</strong>: Both <code>timespec_get()</code> and <code>clock_gettime()</code> provide nanosecond precision</li>
+<li><strong>Monotonic Guarantees</strong>: Use <code>clock_gettime(CLOCK_MONOTONIC)</code> for timing measurements</li>
+<li><strong>Simplicity</strong>: Use <code>time()</code> for basic timestamp needs</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/programming/">Programming</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/posix/">Posix</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/rtems/">RTEMS</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/system-calls/">System-Calls</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/c/">C</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://mez3n.github.io/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
