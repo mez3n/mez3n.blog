@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Pthread on Mez3n&#39;s Blog</title>
-    <link>http://localhost:1313/mez3n.blog/tags/pthread/</link>
+    <link>https://mez3n.github.io/mez3n.blog/tags/pthread/</link>
     <description>Recent content in Pthread on Mez3n&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 16 Jul 2025 21:58:29 +0300</lastBuildDate>
-    <atom:link href="http://localhost:1313/mez3n.blog/tags/pthread/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://mez3n.github.io/mez3n.blog/tags/pthread/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Pthread RWLock Internals: How Reader-Writer Lock Clock Functions Work</title>
-      <link>http://localhost:1313/mez3n.blog/posts/rwlocksinternals/</link>
+      <link>https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/</link>
       <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
-      <guid>http://localhost:1313/mez3n.blog/posts/rwlocksinternals/</guid>
+      <guid>https://mez3n.github.io/mez3n.blog/posts/rwlocksinternals/</guid>
       <description>&lt;h1 id=&#34;understanding-pthread-reader-writer-lock-clock-functions-from-the-inside&#34;&gt;Understanding Pthread Reader-Writer Lock Clock Functions from the Inside&lt;/h1&gt;
 &lt;p&gt;In this blog post, we&amp;rsquo;ll explore how pthread reader-writer lock synchronization primitives work internally, focusing on the clock-aware variants. We&amp;rsquo;ll dive deep into the RTEMS implementation to understand how &lt;code&gt;pthread_rwlock_clockrdlock&lt;/code&gt; and &lt;code&gt;pthread_rwlock_clockwrlock&lt;/code&gt; work under the hood.&lt;/p&gt;
 &lt;h2 id=&#34;why-reader-writer-locks-with-clock-support&#34;&gt;Why Reader-Writer Locks with Clock Support?&lt;/h2&gt;

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/mez3n.blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=mez3n.blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Pthread Internals: How Condition Variables Work | Mez3n&#39;s Blog</title>
 <meta name="keywords" content="">
 <meta name="description" content="Understanding Pthread Condition Variables from the Inside
@@ -12,16 +12,16 @@ In this blog post, we&rsquo;ll explore how pthread synchronization primitives wo
 Why Start with pthread_cond_clockwait?
 We&rsquo;ll begin with pthread_cond_clockwait because it&rsquo;s the most comprehensive function - it includes mutex locking, timeout handling, and clock selection. Understanding this function will help us grasp how the simpler variants work.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/mez3n.blog/posts/pthreadinternals/">
+<link rel="canonical" href="https://mez3n.github.io/mez3n.blog/posts/pthreadinternals/">
 <link crossorigin="anonymous" href="/mez3n.blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/mez3n.blog/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/mez3n.blog/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/mez3n.blog/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/mez3n.blog/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/mez3n.blog/safari-pinned-tab.svg">
+<link rel="icon" href="https://mez3n.github.io/mez3n.blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://mez3n.github.io/mez3n.blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://mez3n.github.io/mez3n.blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://mez3n.github.io/mez3n.blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://mez3n.github.io/mez3n.blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/mez3n.blog/posts/pthreadinternals/">
+<link rel="alternate" hreflang="en" href="https://mez3n.github.io/mez3n.blog/posts/pthreadinternals/">
 <noscript>
     <style>
         #theme-toggle,
@@ -58,7 +58,73 @@ We&rsquo;ll begin with pthread_cond_clockwait because it&rsquo;s the most compre
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:url" content="https://mez3n.github.io/mez3n.blog/posts/pthreadinternals/">
+  <meta property="og:site_name" content="Mez3n&#39;s Blog">
+  <meta property="og:title" content="Pthread Internals: How Condition Variables Work">
+  <meta property="og:description" content="Understanding Pthread Condition Variables from the Inside In this blog post, we’ll explore how pthread synchronization primitives work internally, focusing on condition variables. We’ll dive deep into the RTEMS implementation to understand how pthread_cond_wait, pthread_cond_timedwait, and pthread_cond_clockwait work under the hood.
+Why Start with pthread_cond_clockwait? We’ll begin with pthread_cond_clockwait because it’s the most comprehensive function - it includes mutex locking, timeout handling, and clock selection. Understanding this function will help us grasp how the simpler variants work.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-06T01:10:41+03:00">
+    <meta property="article:modified_time" content="2025-07-06T01:10:41+03:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pthread Internals: How Condition Variables Work">
+<meta name="twitter:description" content="Understanding Pthread Condition Variables from the Inside
+In this blog post, we&rsquo;ll explore how pthread synchronization primitives work internally, focusing on condition variables. We&rsquo;ll dive deep into the RTEMS implementation to understand how pthread_cond_wait, pthread_cond_timedwait, and pthread_cond_clockwait work under the hood.
+Why Start with pthread_cond_clockwait?
+We&rsquo;ll begin with pthread_cond_clockwait because it&rsquo;s the most comprehensive function - it includes mutex locking, timeout handling, and clock selection. Understanding this function will help us grasp how the simpler variants work.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://mez3n.github.io/mez3n.blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pthread Internals: How Condition Variables Work",
+      "item": "https://mez3n.github.io/mez3n.blog/posts/pthreadinternals/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pthread Internals: How Condition Variables Work",
+  "name": "Pthread Internals: How Condition Variables Work",
+  "description": "Understanding Pthread Condition Variables from the Inside In this blog post, we\u0026rsquo;ll explore how pthread synchronization primitives work internally, focusing on condition variables. We\u0026rsquo;ll dive deep into the RTEMS implementation to understand how pthread_cond_wait, pthread_cond_timedwait, and pthread_cond_clockwait work under the hood.\nWhy Start with pthread_cond_clockwait? We\u0026rsquo;ll begin with pthread_cond_clockwait because it\u0026rsquo;s the most comprehensive function - it includes mutex locking, timeout handling, and clock selection. Understanding this function will help us grasp how the simpler variants work.\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Understanding Pthread Condition Variables from the Inside In this blog post, we’ll explore how pthread synchronization primitives work internally, focusing on condition variables. We’ll dive deep into the RTEMS implementation to understand how pthread_cond_wait, pthread_cond_timedwait, and pthread_cond_clockwait work under the hood.\nWhy Start with pthread_cond_clockwait? We’ll begin with pthread_cond_clockwait because it’s the most comprehensive function - it includes mutex locking, timeout handling, and clock selection. Understanding this function will help us grasp how the simpler variants work.\nThe Entry Point: condclockwait.c Let’s start by examining the implementation of pthread_cond_clockwait in condclockwait.c:\nint pthread_cond_clockwait( pthread_cond_t *cond, pthread_mutex_t *mutex, clockid_t clock_id, const struct timespec *abstime ) { if ( abstime == NULL ) { return EINVAL; } if ( clock_id != CLOCK_MONOTONIC \u0026\u0026 clock_id != CLOCK_REALTIME ) { return EINVAL; } return _POSIX_Condition_variables_Wait_support( cond, mutex, abstime, \u0026clock_id ); } Parameter Validation The function performs critical validation checks as required by the POSIX specification:\nTimeout validation: abstime cannot be NULL for a timed wait Clock validation: Only CLOCK_MONOTONIC and CLOCK_REALTIME are supported Notice that clock_id is passed as a reference (\u0026clock_id) to the support function - this is important for internal logic we’ll see later.\nThe Core Logic: _POSIX_Condition_variables_Wait_support Now let’s dive into the heart of the implementation in condwaitsupp.c. The function begins with variable declarations:\nint _POSIX_Condition_variables_Wait_support( pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime, clockid_t *clockid ) { POSIX_Condition_variables_Control *the_cond; unsigned long flags; Thread_queue_Context queue_context; int error; Thread_Control *executing; Getting the Internal Condition Variable Object The first step is to get the internal RTEMS representation:\nthe_cond = _POSIX_Condition_variables_Get( cond ); POSIX_CONDITION_VARIABLES_VALIDATE_OBJECT( the_cond, flags ); The _POSIX_Condition_variables_Get function simply casts the pthread condition variable to RTEMS’s internal type:\nstatic inline POSIX_Condition_variables_Control *_POSIX_Condition_variables_Get( pthread_cond_t *cond ) { return (POSIX_Condition_variables_Control *) cond; } The POSIX_CONDITION_VARIABLES_VALIDATE_OBJECT macro performs validation:\nChecks if the_cond is not NULL Extracts and validates the magic number to ensure proper initialization Handles auto-initialization if needed Copies the flags from the condition variable object Thread Queue Context Initialization _Thread_queue_Context_initialize( \u0026queue_context ); This function initializes the queue context structure that will be used for thread queuing operations. In basic configurations (no SMP or debug mode), this is essentially a no-op.\nDetermining the Operation Type The function needs to determine which pthread function variant is being called based on the parameters:\npthread_cond_wait: No timeout (abstime == NULL) pthread_cond_timedwait: Has timeout, no explicit clock pthread_cond_clockwait: Has timeout and explicit clock Case 1: pthread_cond_clockwait (abstime != NULL \u0026\u0026 clockid != NULL) if ( abstime != NULL ) { _Thread_queue_Context_set_timeout_argument( \u0026queue_context, abstime, true ); if ( clockid != NULL ) { if ( *clockid == CLOCK_MONOTONIC ) { _Thread_queue_Context_set_enqueue_callout( \u0026queue_context, _POSIX_Condition_variables_Enqueue_with_timeout_monotonic ); } else { _Thread_queue_Context_set_enqueue_callout( \u0026queue_context, _POSIX_Condition_variables_Enqueue_with_timeout_realtime ); } } // ... (timedwait case follows) } When clockid is not NULL, we’re in the clockwait variant. The function sets up the appropriate timeout callback based on the clock type.\nCase 2: pthread_cond_timedwait (abstime != NULL \u0026\u0026 clockid == NULL) else { if ( _POSIX_Condition_variables_Get_clock( flags ) == CLOCK_MONOTONIC ) { _Thread_queue_Context_set_enqueue_callout( \u0026queue_context, _POSIX_Condition_variables_Enqueue_with_timeout_monotonic ); } else { _Thread_queue_Context_set_enqueue_callout( \u0026queue_context, _POSIX_Condition_variables_Enqueue_with_timeout_realtime ); } } For timed wait, the clock is determined from the condition variable’s attributes (set via pthread_condattr_setclock). The clock information is stored in the flags field of the condition variable.\nCase 3: pthread_cond_wait (abstime == NULL) else { _Thread_queue_Context_set_enqueue_callout( \u0026queue_context, _POSIX_Condition_variables_Enqueue_no_timeout ); } For the simple wait case, no timeout is needed.\nThe Enqueue Timeout Functions Now let’s understand what these enqueue callback functions do. They are called when a thread needs to be added to the condition variable’s waiting queue. Once the thread is enqueued, it enters a waiting state where it releases the mutex and can be awakened by one of three mechanisms:\nTimeout expiration (for pthread_cond_clockwait and pthread_cond_timedwait) Signal from another thread via pthread_cond_signal() Broadcast from another thread via pthread_cond_broadcast() The key insight is that these enqueue functions perform two critical operations atomically:\nSet up the timeout mechanism (if needed) Release the mutex so other threads can acquire it and potentially signal the condition No Timeout Version static void _POSIX_Condition_variables_Enqueue_no_timeout( Thread_queue_Queue *queue, Thread_Control *the_thread, Per_CPU_Control *cpu_self, Thread_queue_Context *queue_context ) { _POSIX_Condition_variables_Mutex_unlock( queue, the_thread, queue_context ); } This simply unlocks the mutex - no timeout setup is needed.\nMonotonic Timeout Version static void _POSIX_Condition_variables_Enqueue_with_timeout_monotonic( Thread_queue_Queue *queue, Thread_Control *the_thread, Per_CPU_Control *cpu_self, Thread_queue_Context *queue_context ) { _Thread_queue_Add_timeout_monotonic_timespec( queue, the_thread, cpu_self, queue_context ); _POSIX_Condition_variables_Mutex_unlock( queue, the_thread, queue_context ); } This sets up a monotonic timeout and then unlocks the mutex.\nUnderstanding Clock Types: Monotonic vs Realtime Before we continue, let’s understand the fundamental difference between these clock types:\nCLOCK_REALTIME Wall Clock Time: Represents actual calendar time (e.g., “January 15, 2025, 3:30 PM”) Can Jump: System administrators can change it, NTP can adjust it Affected by Time Changes: If someone sets the system clock back 1 hour, timeouts based on realtime will be extended by 1 hour Use Case: When you need timeouts based on absolute calendar time Example Problem:\n// It's 3:00 PM, timeout set for 3:05 PM pthread_cond_clockwait(\u0026cond, \u0026mutex, CLOCK_REALTIME, \u0026timeout_3_05_PM); // At 3:02 PM, admin sets system clock back to 2:00 PM // Your timeout now won't fire until 3:05 PM \"again\" - 1 hour and 3 minutes later! CLOCK_MONOTONIC System Uptime: Represents time since system boot Never Goes Backward: Guaranteed to be monotonically increasing Immune to Time Changes: System clock adjustments don’t affect it Use Case: When you need reliable relative timeouts Example Benefit:\n// System uptime: 50000 seconds, timeout set for +5 seconds (50005 seconds) pthread_cond_clockwait(\u0026cond, \u0026mutex, CLOCK_MONOTONIC, \u0026timeout_in_5_sec); // Even if admin changes wall clock, timeout still fires in exactly 5 seconds When to Use Which? Use CLOCK_REALTIME when:\nYou need to wake up at a specific calendar time Coordinating with external systems using wall clock time Example: “Wake up at midnight to run daily backup” Use CLOCK_MONOTONIC when:\nYou need reliable relative timeouts Measuring elapsed time or intervals Most application timeouts Example: “Timeout after 30 seconds of waiting” Realtime Timeout Version static void _POSIX_Condition_variables_Enqueue_with_timeout_realtime( Thread_queue_Queue *queue, Thread_Control *the_thread, Per_CPU_Control *cpu_self, Thread_queue_Context *queue_context ) { _Thread_queue_Add_timeout_realtime_timespec( queue, the_thread, cpu_self, queue_context ); _POSIX_Condition_variables_Mutex_unlock( queue, the_thread, queue_context ); } This sets up a realtime timeout and then unlocks the mutex.\nThe Critical Mutex Unlock Function All enqueue functions call _POSIX_Condition_variables_Mutex_unlock:\nstatic void _POSIX_Condition_variables_Mutex_unlock( Thread_queue_Queue *queue, Thread_Control *the_thread, Thread_queue_Context *queue_context ) { POSIX_Condition_variables_Control *the_cond; int mutex_error; the_cond = POSIX_CONDITION_VARIABLE_OF_THREAD_QUEUE_QUEUE( queue ); mutex_error = pthread_mutex_unlock( the_cond-\u003emutex ); if ( mutex_error != 0 ) { /* * Historically, we ignored the unlock status since the behavior * is undefined by POSIX. But GNU/Linux returns EPERM in this * case, so we follow their lead. */ _Assert( mutex_error == EINVAL || mutex_error == EPERM ); _Thread_Continue( the_thread, STATUS_NOT_OWNER ); } } This function is crucial because it handles the atomic release of the mutex when the thread goes to sleep. If the mutex unlock fails, the thread is continued with an error status instead of being blocked.\nThread Queuing and Waiting After setting up the timeout callbacks, the main function continues with:\nexecuting = _POSIX_Condition_variables_Acquire( the_cond, \u0026queue_context ); if ( the_cond-\u003emutex != POSIX_CONDITION_VARIABLES_NO_MUTEX \u0026\u0026 the_cond-\u003emutex != mutex ) { _POSIX_Condition_variables_Release( the_cond, \u0026queue_context ); return EINVAL; } the_cond-\u003emutex = mutex; _Thread_queue_Context_set_thread_state( \u0026queue_context, STATES_WAITING_FOR_CONDITION_VARIABLE ); _Thread_queue_Enqueue( \u0026the_cond-\u003eQueue.Queue, POSIX_CONDITION_VARIABLES_TQ_OPERATIONS, executing, \u0026queue_context ); This section:\nAcquires the condition variable’s lock to ensure thread-safe access to the condition variable’s internal state Validates that the mutex is consistent (the same mutex must be used across all waiters) Associates the mutex with the condition variable Sets the thread state to waiting for condition variable Enqueues the thread, which triggers the timeout callback we set up earlier Error Handling and Cleanup Finally, the function handles the result:\nerror = _POSIX_Get_error_after_wait( executing ); /* * If the thread is interrupted, while in the thread queue, by * a POSIX signal, then pthread_cond_wait returns spuriously, * according to the POSIX standard. */ if ( error == EINTR ) { error = 0; } /* * When we get here the dispatch disable level is 0. */ if ( error != EPERM ) { int mutex_error; mutex_error = pthread_mutex_lock( mutex ); if ( mutex_error != 0 ) { _Assert( mutex_error == EINVAL ); error = EINVAL; } } return error; This handles:\nConverting thread queue errors to POSIX error codes Handling spurious wakeups from signals (the function returns normally, requiring applications to use condition variables in loops) Re-acquiring the mutex after waking up (unless there was a permission error like EPERM) Summary The pthread condition variable implementation in RTEMS demonstrates several key concepts:\nUnified Implementation: One support function handles all three variants (wait, timedwait, clockwait) Callback-based Timeout: Different timeout behaviors are handled through function pointers Atomic Mutex Operations: The mutex is unlocked atomically when the thread goes to sleep Thread Queue Management: The underlying thread queue system handles the actual blocking and wakeup logic Key Takeaways For Application Developers Always use condition variables in loops: Spurious wakeups are a feature, not a bug Understand timeout semantics: Choose between monotonic and realtime clocks based on your needs Handle all error cases: Including ETIMEDOUT, EINVAL, and EPERM The Complete Flow Summary API Entry: pthread_cond_clockwait() validates parameters and delegates to support function Operation Detection: Support function determines which variant is being called based on parameters Callback Setup: Appropriate timeout callback is selected (none, monotonic, or realtime) Thread Queuing: Thread is enqueued on condition variable with timeout setup and mutex unlock Waiting: Thread sleeps until woken by signal, broadcast, timeout, or signal interruption Wakeup Processing: Error codes are converted, spurious wakeups handled, and mutex re-acquired Return: Function returns with appropriate status and mutex locked (if successful) ",
+  "wordCount" : "1584",
+  "inLanguage": "en",
+  "datePublished": "2025-07-06T01:10:41+03:00",
+  "dateModified": "2025-07-06T01:10:41+03:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mez3n.github.io/mez3n.blog/posts/pthreadinternals/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mez3n's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://mez3n.github.io/mez3n.blog/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -76,7 +142,7 @@ We&rsquo;ll begin with pthread_cond_clockwait because it&rsquo;s the most compre
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
+            <a href="https://mez3n.github.io/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -463,7 +529,7 @@ We&rsquo;ll begin with pthread_cond_clockwait because it&rsquo;s the most compre
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
+        <span>&copy; 2025 <a href="https://mez3n.github.io/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
 
     <span>
         Powered by

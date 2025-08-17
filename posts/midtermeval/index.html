@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/mez3n.blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=mez3n.blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS | Mez3n&#39;s Blog</title>
 <meta name="keywords" content="GSoC, RTEMS, POSIX, C, Programming, Open Source">
 <meta name="description" content="GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS
@@ -12,16 +12,16 @@ As I reach the midpoint of my Google Summer of Code 2025 journey with RTEMS, I&r
 Project Overview
 My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 functions in RTEMS:">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/mez3n.blog/posts/midtermeval/">
+<link rel="canonical" href="https://mez3n.github.io/mez3n.blog/posts/midtermeval/">
 <link crossorigin="anonymous" href="/mez3n.blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/mez3n.blog/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/mez3n.blog/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/mez3n.blog/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/mez3n.blog/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/mez3n.blog/safari-pinned-tab.svg">
+<link rel="icon" href="https://mez3n.github.io/mez3n.blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://mez3n.github.io/mez3n.blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://mez3n.github.io/mez3n.blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://mez3n.github.io/mez3n.blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://mez3n.github.io/mez3n.blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/mez3n.blog/posts/midtermeval/">
+<link rel="alternate" hreflang="en" href="https://mez3n.github.io/mez3n.blog/posts/midtermeval/">
 <noscript>
     <style>
         #theme-toggle,
@@ -58,7 +58,79 @@ My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 function
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:url" content="https://mez3n.github.io/mez3n.blog/posts/midtermeval/">
+  <meta property="og:site_name" content="Mez3n&#39;s Blog">
+  <meta property="og:title" content="GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS">
+  <meta property="og:description" content="GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS As I reach the midpoint of my Google Summer of Code 2025 journey with RTEMS, I’m excited to share the progress I’ve made on implementing POSIX Issue 8 functions. This project aims to enhance RTEMS’ POSIX compliance by adding support for new functions introduced in the latest POSIX standard.
+Project Overview My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 functions in RTEMS:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-16T21:51:29+03:00">
+    <meta property="article:modified_time" content="2025-07-16T21:51:29+03:00">
+    <meta property="article:tag" content="GSoC">
+    <meta property="article:tag" content="RTEMS">
+    <meta property="article:tag" content="Posix">
+    <meta property="article:tag" content="C">
+    <meta property="article:tag" content="Programming">
+    <meta property="article:tag" content="Open Source">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS">
+<meta name="twitter:description" content="GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS
+As I reach the midpoint of my Google Summer of Code 2025 journey with RTEMS, I&rsquo;m excited to share the progress I&rsquo;ve made on implementing POSIX Issue 8 functions. This project aims to enhance RTEMS&rsquo; POSIX compliance by adding support for new functions introduced in the latest POSIX standard.
+Project Overview
+My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 functions in RTEMS:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://mez3n.github.io/mez3n.blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS",
+      "item": "https://mez3n.github.io/mez3n.blog/posts/midtermeval/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS",
+  "name": "GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS",
+  "description": "GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS As I reach the midpoint of my Google Summer of Code 2025 journey with RTEMS, I\u0026rsquo;m excited to share the progress I\u0026rsquo;ve made on implementing POSIX Issue 8 functions. This project aims to enhance RTEMS\u0026rsquo; POSIX compliance by adding support for new functions introduced in the latest POSIX standard.\nProject Overview My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 functions in RTEMS:\n",
+  "keywords": [
+    "GSoC", "RTEMS", "POSIX", "C", "Programming", "Open Source"
+  ],
+  "articleBody": "GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS As I reach the midpoint of my Google Summer of Code 2025 journey with RTEMS, I’m excited to share the progress I’ve made on implementing POSIX Issue 8 functions. This project aims to enhance RTEMS’ POSIX compliance by adding support for new functions introduced in the latest POSIX standard.\nProject Overview My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 functions in RTEMS:\npthread_cond_clockwait() pthread_mutex_clocklock() pthread_rwlock_clockrdlock() pthread_rwlock_clockwrlock() sem_clockwait() timespec_get() posix_getdents() ppoll() dladdr() quick_exit() and at_quick_exit() Completed Work 1. POSIX Header OK Tests (✅ Completed) Merge Request: #497\nThe first major milestone was creating API header OK tests for all the functions I planned to implement. These tests verify that the function prototypes are correctly declared in the appropriate headers.\n/* Example from testsuites/psxtests/psxhdrs/pthread/pthread_cond_clockwait.c */ #define _POSIX_C_SOURCE 202405L #ifdef HAVE_CONFIG_H #include \"config.h\" #endif #include #ifndef _POSIX_THREADS #error \"rtems is supposed to have pthread_cond_clockwait\" #endif #if !defined(_POSIX_CLOCK_SELECTION) || _POSIX_CLOCK_SELECTION == -1 #error \"rtems is supposed to have pthread_cond_clockwait\" #endif int test(void); int test(void) { pthread_cond_t cond = PTHREAD_COND_INITIALIZER; pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; clockid_t clock_id = CLOCK_REALTIME; struct timespec abstime; int result; result = pthread_cond_clockwait(\u0026cond, \u0026mutex, clock_id, \u0026abstime); return result; } This phase involved creating comprehensive tests for all target functions, ensuring they would compile correctly with the proper feature test macros and guards.\n2. Newlib Header Updates (✅ Completed \u0026 Merged) Newlib Patch Series: Merged into newlib main\nA crucial part of the project was updating the newlib C library (which RTEMS uses) to include the proper function prototypes. My 5-patch series was successfully merged into newlib’s main branch:\n/* Added to newlib/libc/include/time.h */ #if __POSIX_VISIBLE \u003e= 200112 || __ISO_C_VISIBLE \u003e= 2011 int timespec_get(struct timespec *, int); #endif /* Added to newlib/libc/sys/rtems/include/semaphore.h */ #if defined(__rtems__) \u0026\u0026 (_POSIX_C_SOURCE \u003e= 202405L) int sem_clockwait(sem_t *__sem, clockid_t __clock_id, const struct timespec *__abstime); #endif /* Updated guards for quick_exit() and at_quick_exit() in stdlib.h */ #if __ISO_C_VISIBLE \u003e= 2011 || (_POSIX_C_SOURCE \u003e= 202405L) int at_quick_exit(void (*)(void)); void quick_exit(int); #endif The patch series included:\ntimespec_get() prototype addition to time.h pthread.h guard updates for POSIX Issue 8 functions sem_clockwait() prototype addition to semaphore.h ppoll() prototype addition to sys/poll.h quick_exit() and at_quick_exit() guard updates in stdlib.h 3. pthread Clock Functions Implementation (✅ Completed) Merge Request: #547\nI successfully implemented four pthread clock functions:\npthread_cond_clockwait() int pthread_cond_clockwait( pthread_cond_t *cond, pthread_mutex_t *mutex, clockid_t clock_id, const struct timespec *abstime ) { if (abstime == NULL) { return EINVAL; } if (clock_id != CLOCK_MONOTONIC \u0026\u0026 clock_id != CLOCK_REALTIME) { return EINVAL; } return _POSIX_Condition_variables_Wait_support(cond, mutex, abstime, clock_id); } pthread_mutex_clocklock() int pthread_mutex_clocklock( pthread_mutex_t *mutex, clockid_t clock_id, const struct timespec *abstime ) { if (clock_id == CLOCK_REALTIME) { return _POSIX_Mutex_Lock_support( mutex, abstime, _Thread_queue_Add_timeout_realtime_timespec ); } if (clock_id == CLOCK_MONOTONIC) { return _POSIX_Mutex_Lock_support( mutex, abstime, _Thread_queue_Add_timeout_monotonic_timespec ); } return EINVAL; } The implementation also included comprehensive test suites that verify:\nCorrect behavior with different clock types (CLOCK_REALTIME, CLOCK_MONOTONIC) Proper error handling for invalid parameters 4. quick_exit() and at_quick_exit() Tests (✅ Completed) Merge Request: #584\nImplementing tests for the quick_exit() and at_quick_exit() functions. These functions provide a middle ground between exit() (which performs full cleanup) and _Exit() (which performs no cleanup).\n/* Test implementation showing LIFO handler execution */ static int counter; static void at_quick_exit_0(void) { assert(counter == 0); ++counter; } static void at_quick_exit_1(void) { assert(counter == 1); ++counter; } static void at_quick_exit_2(void) { assert(counter == 2); ++counter; } static void *exit_thread(void *arg) { int eno; // Register handlers in order: 2, 1, 0 eno = at_quick_exit(at_quick_exit_2); assert(eno == 0); eno = at_quick_exit(at_quick_exit_1); assert(eno == 0); eno = at_quick_exit(at_quick_exit_0); assert(eno == 0); // Handlers execute in LIFO order: 0, 1, 2 quick_exit(EXIT_STATUS); } The test uses a custom fatal extension to validate that:\nAll at_quick_exit() handlers execute in LIFO order The program terminates with the correct exit status quick_exit() properly terminates the entire program (not just the thread) Remaining Work for Final Evaluation The remaining functions to implement and test are:\nsem_clockwait() - Semaphore wait with clock specification timespec_get() - Get current time with specified time base posix_getdents() - Get directory entries in POSIX format ppoll() - Poll file descriptors with signal mask dladdr() - Get symbol information from address Learning Outcomes This project has significantly enhanced my understanding of:\nPOSIX Standards: Deep dive into POSIX Issue 8 specifications Real-time Systems: Understanding RTEMS architecture and threading C Library Development: Working with newlib and system-level programming Open Source Collaboration: Working with maintainers and following review processes Testing Methodologies: Creating comprehensive test suites for system-level functions Looking Forward The second half of GSoC will focus on completing the remaining functions and ensuring all tests pass.\nThis project contributes to RTEMS’ goal of providing comprehensive POSIX compliance, which is crucial for developers who need to port POSIX applications to real-time systems.\nLinks Project Repository: RTEMS GitLab Merge Request #497: POSIX Header OK Tests Merge Request #547: pthread Clock Functions Merge Request #584: quick_exit Tests Newlib Patches: Merged Patches This blog post represents my midterm evaluation for Google Summer of Code 2025. The project continues to progress toward full POSIX Issue 8 compliance in RTEMS.\n",
+  "wordCount" : "848",
+  "inLanguage": "en",
+  "datePublished": "2025-07-16T21:51:29+03:00",
+  "dateModified": "2025-07-16T21:51:29+03:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mez3n.github.io/mez3n.blog/posts/midtermeval/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mez3n's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://mez3n.github.io/mez3n.blog/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -76,7 +148,7 @@ My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 function
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
+            <a href="https://mez3n.github.io/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -326,19 +398,19 @@ My GSoC project focuses on implementing and testing 8 key POSIX Issue 8 function
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/mez3n.blog/tags/gsoc/">GSoC</a></li>
-      <li><a href="http://localhost:1313/mez3n.blog/tags/rtems/">RTEMS</a></li>
-      <li><a href="http://localhost:1313/mez3n.blog/tags/posix/">Posix</a></li>
-      <li><a href="http://localhost:1313/mez3n.blog/tags/c/">C</a></li>
-      <li><a href="http://localhost:1313/mez3n.blog/tags/programming/">Programming</a></li>
-      <li><a href="http://localhost:1313/mez3n.blog/tags/open-source/">Open Source</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/gsoc/">GSoC</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/rtems/">RTEMS</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/posix/">Posix</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/c/">C</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/programming/">Programming</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/open-source/">Open Source</a></li>
     </ul>
   </footer>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
+        <span>&copy; 2025 <a href="https://mez3n.github.io/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
 
     <span>
         Powered by
