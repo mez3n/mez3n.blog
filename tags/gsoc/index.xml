@@ -6,8 +6,18 @@
     <description>Recent content in GSoC on Mez3n&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 16 Jul 2025 21:51:29 +0300</lastBuildDate>
+    <lastBuildDate>Thu, 28 Aug 2025 16:02:15 +0300</lastBuildDate>
     <atom:link href="https://mez3n.github.io/mez3n.blog/tags/gsoc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS</title>
+      <link>https://mez3n.github.io/mez3n.blog/posts/gsoc2025wrapup/</link>
+      <pubDate>Thu, 28 Aug 2025 16:02:15 +0300</pubDate>
+      <guid>https://mez3n.github.io/mez3n.blog/posts/gsoc2025wrapup/</guid>
+      <description>&lt;h1 id=&#34;gsoc-2025-final-report-implementing-posix-issue-8-functions-in-rtems&#34;&gt;GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS&lt;/h1&gt;
+&lt;h2 id=&#34;project-summary&#34;&gt;Project Summary&lt;/h2&gt;
+&lt;p&gt;My Google Summer of Code 2025 project focused on enhancing RTEMS&amp;rsquo; POSIX compliance by implementing critical functions introduced in POSIX Issue 8. RTEMS (Real-Time Executive for Multiprocessor Systems) is a real-time operating system designed for embedded and mission-critical applications, including space exploration and aerospace systems.&lt;/p&gt;
+&lt;p&gt;The goal of this project was to analyze, implement, and thoroughly test missing POSIX Issue 8 APIs to bring RTEMS closer to full POSIX compliance, enabling better portability and functionality for real-time applications.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS</title>
       <link>https://mez3n.github.io/mez3n.blog/posts/midtermeval/</link>

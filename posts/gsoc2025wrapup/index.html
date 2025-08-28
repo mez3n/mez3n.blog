@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS | Mez3n&#39;s Blog</title>
+<meta name="keywords" content="GSoC, RTEMS, POSIX, C, Programming, Open Source">
+<meta name="description" content="GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS
+Project Summary
+My Google Summer of Code 2025 project focused on enhancing RTEMS&rsquo; POSIX compliance by implementing critical functions introduced in POSIX Issue 8. RTEMS (Real-Time Executive for Multiprocessor Systems) is a real-time operating system designed for embedded and mission-critical applications, including space exploration and aerospace systems.
+The goal of this project was to analyze, implement, and thoroughly test missing POSIX Issue 8 APIs to bring RTEMS closer to full POSIX compliance, enabling better portability and functionality for real-time applications.">
+<meta name="author" content="">
+<link rel="canonical" href="https://mez3n.github.io/mez3n.blog/posts/gsoc2025wrapup/">
+<link crossorigin="anonymous" href="/mez3n.blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://mez3n.github.io/mez3n.blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://mez3n.github.io/mez3n.blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://mez3n.github.io/mez3n.blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://mez3n.github.io/mez3n.blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://mez3n.github.io/mez3n.blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://mez3n.github.io/mez3n.blog/posts/gsoc2025wrapup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:url" content="https://mez3n.github.io/mez3n.blog/posts/gsoc2025wrapup/">
+  <meta property="og:site_name" content="Mez3n&#39;s Blog">
+  <meta property="og:title" content="GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS">
+  <meta property="og:description" content="GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS Project Summary My Google Summer of Code 2025 project focused on enhancing RTEMS’ POSIX compliance by implementing critical functions introduced in POSIX Issue 8. RTEMS (Real-Time Executive for Multiprocessor Systems) is a real-time operating system designed for embedded and mission-critical applications, including space exploration and aerospace systems.
+The goal of this project was to analyze, implement, and thoroughly test missing POSIX Issue 8 APIs to bring RTEMS closer to full POSIX compliance, enabling better portability and functionality for real-time applications.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-28T16:02:15+03:00">
+    <meta property="article:modified_time" content="2025-08-28T16:02:15+03:00">
+    <meta property="article:tag" content="GSoC">
+    <meta property="article:tag" content="RTEMS">
+    <meta property="article:tag" content="Posix">
+    <meta property="article:tag" content="C">
+    <meta property="article:tag" content="Programming">
+    <meta property="article:tag" content="Open Source">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS">
+<meta name="twitter:description" content="GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS
+Project Summary
+My Google Summer of Code 2025 project focused on enhancing RTEMS&rsquo; POSIX compliance by implementing critical functions introduced in POSIX Issue 8. RTEMS (Real-Time Executive for Multiprocessor Systems) is a real-time operating system designed for embedded and mission-critical applications, including space exploration and aerospace systems.
+The goal of this project was to analyze, implement, and thoroughly test missing POSIX Issue 8 APIs to bring RTEMS closer to full POSIX compliance, enabling better portability and functionality for real-time applications.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://mez3n.github.io/mez3n.blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS",
+      "item": "https://mez3n.github.io/mez3n.blog/posts/gsoc2025wrapup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS",
+  "name": "GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS",
+  "description": "GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS Project Summary My Google Summer of Code 2025 project focused on enhancing RTEMS\u0026rsquo; POSIX compliance by implementing critical functions introduced in POSIX Issue 8. RTEMS (Real-Time Executive for Multiprocessor Systems) is a real-time operating system designed for embedded and mission-critical applications, including space exploration and aerospace systems.\nThe goal of this project was to analyze, implement, and thoroughly test missing POSIX Issue 8 APIs to bring RTEMS closer to full POSIX compliance, enabling better portability and functionality for real-time applications.\n",
+  "keywords": [
+    "GSoC", "RTEMS", "POSIX", "C", "Programming", "Open Source"
+  ],
+  "articleBody": "GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS Project Summary My Google Summer of Code 2025 project focused on enhancing RTEMS’ POSIX compliance by implementing critical functions introduced in POSIX Issue 8. RTEMS (Real-Time Executive for Multiprocessor Systems) is a real-time operating system designed for embedded and mission-critical applications, including space exploration and aerospace systems.\nThe goal of this project was to analyze, implement, and thoroughly test missing POSIX Issue 8 APIs to bring RTEMS closer to full POSIX compliance, enabling better portability and functionality for real-time applications.\nProject Proposal: GSOC2025_MEZ3N_New APIs Added to POSIX Standard (Issue8)(#69)\nGitLab Activity: My contribution history\nProject Issue: rtems/programs/gsoc#69\nProject Epic: rtems\u002624\nWork Completed Throughout the summer, I successfully implemented and tested all 11 POSIX Issue 8 functions. The implementation process required several foundational steps before the actual function development could begin.\nNewlib Header Updates Before implementing the functions in RTEMS, I first had to modify the Newlib C library headers to add proper function declarations and feature test macro guards for the new POSIX Issue 8 functions that I would be implementing. This foundational work was essential to ensure the functions would be properly exposed to applications.\nNewlib Header Patch: Add POSIX Issue 8 function declarations\nThis patch added the necessary function prototypes and conditional compilation guards to headers like pthread.h, semaphore.h, time.h, and others, ensuring that the new functions would be available when applications compile with the appropriate feature test macros.\nHeader Verification Tests Before implementing the actual functions, I had to created OK tests to verify that all POSIX Issue 8 functions are properly declared in their respective header files.\nHeader OK Tests: MR !497 - Add POSIX Issue 8 header verification\nAdditionally, I updated the thread queue infrastructure to ease the integration of pthread clock functions:\nThread Queue Updates: MR !618 - Update thread queues for clock function support\nThese foundational changes streamlined the implementation of clock-based pthread functions by creating shared infrastructure, making the code more maintainable and reducing duplication.\nSummary of Implemented Functions Function Merge Request posix_getdents() MR !692 ppoll() MR !83 pthread_cond_clockwait() MR !547 pthread_rwlock_clockrdlock() MR !547 pthread_rwlock_clockwrlock() MR !547 pthread_mutex_clocklock() MR !547 sem_clockwait() MR !669 at_quick_exit() MR !584 quick_exit() MR !584 timespec_get() MR !670 dladdr() MR !679 Current State I successfully completed all 11 planned functions, with all functions fully integrated and available in RTEMS. The project significantly improved RTEMS’ POSIX Issue 8 compliance.\nMerge Status While all functions have been implemented and tested, some merge requests are currently on hold. The mentors decided to delay merging certain functions until after the GSoC period to avoid requiring all RTEMS 7 developers to update their toolchains during the active development phase, which would create unnecessary complications and hassle for other contributors during the summer.\nConclusion This GSoC experience has been transformative in my understanding of real-time systems programming. Contributing to RTEMS, which powers spacecraft and critical embedded systems, was both challenging and rewarding.\nKey Achievements:\n11/11 functions implemented - 100% project completion Full POSIX Issue 8 compliance for targeted functions I want to thank my mentors and the entire RTEMS community for their guidance throughout this journey. The work significantly advances RTEMS’ POSIX compliance and benefits the entire embedded systems community.\nNone of this would have been possible without the invaluable guidance I received throughout the coding period from my mentors Joel, Gedare, and the entire RTEMS community. Beyond the technical implementation, I learned many important lessons: from maintaining backup branches to safeguard work, to the value of thorough documentation and comprehensive testing, and most importantly, the role of curiosity and continuous learning in software engineering. These lessons will stay with me and prove invaluable in my future career.\nI am deeply grateful to my mentors, the RTEMS community, and to Google for providing me with this transformative opportunity and experience. I plan to continue contributing to RTEMS beyond GSoC, maintaining the implemented code and supporting future POSIX enhancements.\nBlog Posts Written During GSoC New APIs Added to POSIX Standard (Issue 8): A Comprehensive Implementation Guide GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS Submitting Patches To Newlib Time APIs in C: A Deep Dive into timespec_get() and Modern Time Retrieval Methods Threading and Synchronization in RTEMS: Understanding pthread Internals The World of pthread: Exploring POSIX Threading Understanding RWLocks Internals in RTEMS The Exit Family: Understanding Process Termination ",
+  "wordCount" : "727",
+  "inLanguage": "en",
+  "datePublished": "2025-08-28T16:02:15+03:00",
+  "dateModified": "2025-08-28T16:02:15+03:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://mez3n.github.io/mez3n.blog/posts/gsoc2025wrapup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mez3n's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://mez3n.github.io/mez3n.blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://mez3n.github.io/mez3n.blog/" accesskey="h" title="Mez3n&#39;s Blog (Alt + H)">Mez3n&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS
+    </h1>
+    <div class="post-meta"><span title='2025-08-28 16:02:15 +0300 EEST'>August 28, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="gsoc-2025-final-report-implementing-posix-issue-8-functions-in-rtems">GSoC 2025 Final Report: Implementing POSIX Issue 8 Functions in RTEMS<a hidden class="anchor" aria-hidden="true" href="#gsoc-2025-final-report-implementing-posix-issue-8-functions-in-rtems">#</a></h1>
+<h2 id="project-summary">Project Summary<a hidden class="anchor" aria-hidden="true" href="#project-summary">#</a></h2>
+<p>My Google Summer of Code 2025 project focused on enhancing RTEMS&rsquo; POSIX compliance by implementing critical functions introduced in POSIX Issue 8. RTEMS (Real-Time Executive for Multiprocessor Systems) is a real-time operating system designed for embedded and mission-critical applications, including space exploration and aerospace systems.</p>
+<p>The goal of this project was to analyze, implement, and thoroughly test missing POSIX Issue 8 APIs to bring RTEMS closer to full POSIX compliance, enabling better portability and functionality for real-time applications.</p>
+<p><strong>Project Proposal:</strong> <a href="https://docs.google.com/document/d/1n69h3cvYUvXeSV85Vdl_XBlhRKBoalrreGpRYpx99Tk/edit?tab=t.0#heading=h.qwofntymv246">GSOC2025_MEZ3N_New APIs Added to POSIX Standard (Issue8)(#69)</a><br>
+<strong>GitLab Activity:</strong> <a href="https://gitlab.rtems.org/users/mez3n/activity">My contribution history</a><br>
+<strong>Project Issue:</strong> <a href="https://gitlab.rtems.org/rtems/programs/gsoc/-/issues/69">rtems/programs/gsoc#69</a><br>
+<strong>Project Epic:</strong> <a href="https://gitlab.rtems.org/groups/rtems/-/epics/24">rtems&amp;24</a></p>
+<h2 id="work-completed">Work Completed<a hidden class="anchor" aria-hidden="true" href="#work-completed">#</a></h2>
+<p>Throughout the summer, I successfully implemented and tested all 11 POSIX Issue 8 functions. The implementation process required several foundational steps before the actual function development could begin.</p>
+<h2 id="newlib-header-updates">Newlib Header Updates<a hidden class="anchor" aria-hidden="true" href="#newlib-header-updates">#</a></h2>
+<p>Before implementing the functions in RTEMS, I first had to modify the Newlib C library headers to add proper function declarations and feature test macro guards for the new POSIX Issue 8 functions that I would be implementing. This foundational work was essential to ensure the functions would be properly exposed to applications.</p>
+<p><strong>Newlib Header Patch:</strong> <a href="https://sourceware.org/pipermail/newlib/2025/021926.html">Add POSIX Issue 8 function declarations</a></p>
+<p>This patch added the necessary function prototypes and conditional compilation guards to headers like <code>pthread.h</code>, <code>semaphore.h</code>, <code>time.h</code>, and others, ensuring that the new functions would be available when applications compile with the appropriate feature test macros.</p>
+<h2 id="header-verification-tests">Header Verification Tests<a hidden class="anchor" aria-hidden="true" href="#header-verification-tests">#</a></h2>
+<p>Before implementing the actual functions, I had to created OK tests to verify that all POSIX Issue 8 functions are properly declared in their respective header files.</p>
+<p><strong>Header OK Tests:</strong> <a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/497">MR !497 - Add POSIX Issue 8 header verification</a></p>
+<p>Additionally, I updated the thread queue infrastructure to ease the integration of pthread clock functions:</p>
+<p><strong>Thread Queue Updates:</strong> <a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/618">MR !618 - Update thread queues for clock function support</a></p>
+<p>These foundational changes streamlined the implementation of clock-based pthread functions by creating shared infrastructure, making the code more maintainable and reducing duplication.</p>
+<h2 id="summary-of-implemented-functions">Summary of Implemented Functions<a hidden class="anchor" aria-hidden="true" href="#summary-of-implemented-functions">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>Function</th>
+          <th>Merge Request</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>posix_getdents()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/692">MR !692</a></td>
+      </tr>
+      <tr>
+          <td>ppoll()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/pkg/rtems-libbsd/-/merge_requests/83">MR !83</a></td>
+      </tr>
+      <tr>
+          <td>pthread_cond_clockwait()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/547">MR !547</a></td>
+      </tr>
+      <tr>
+          <td>pthread_rwlock_clockrdlock()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/547">MR !547</a></td>
+      </tr>
+      <tr>
+          <td>pthread_rwlock_clockwrlock()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/547">MR !547</a></td>
+      </tr>
+      <tr>
+          <td>pthread_mutex_clocklock()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/547">MR !547</a></td>
+      </tr>
+      <tr>
+          <td>sem_clockwait()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/669">MR !669</a></td>
+      </tr>
+      <tr>
+          <td>at_quick_exit()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/584">MR !584</a></td>
+      </tr>
+      <tr>
+          <td>quick_exit()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/584">MR !584</a></td>
+      </tr>
+      <tr>
+          <td>timespec_get()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/670">MR !670</a></td>
+      </tr>
+      <tr>
+          <td>dladdr()</td>
+          <td><a href="https://gitlab.rtems.org/rtems/rtos/rtems/-/merge_requests/679">MR !679</a></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="current-state">Current State<a hidden class="anchor" aria-hidden="true" href="#current-state">#</a></h2>
+<p>I successfully completed all 11 planned functions, with all functions fully integrated and available in RTEMS. The project significantly improved RTEMS&rsquo; POSIX Issue 8 compliance.</p>
+<h2 id="merge-status">Merge Status<a hidden class="anchor" aria-hidden="true" href="#merge-status">#</a></h2>
+<p>While all functions have been implemented and tested, some merge requests are currently on hold. The mentors decided to delay merging certain functions until after the GSoC period to avoid requiring all RTEMS 7 developers to update their toolchains during the active development phase, which would create unnecessary complications and hassle for other contributors during the summer.</p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>This GSoC experience has been transformative in my understanding of real-time systems programming. Contributing to RTEMS, which powers spacecraft and critical embedded systems, was both challenging and rewarding.</p>
+<p><strong>Key Achievements:</strong></p>
+<ul>
+<li><strong>11/11 functions implemented</strong> - 100% project completion</li>
+<li><strong>Full POSIX Issue 8 compliance</strong> for targeted functions</li>
+</ul>
+<p>I want to thank my mentors and the entire RTEMS community for their guidance throughout this journey. The work significantly advances RTEMS&rsquo; POSIX compliance and benefits the entire embedded systems community.</p>
+<p>None of this would have been possible without the invaluable guidance I received throughout the coding period from my mentors Joel, Gedare, and the entire RTEMS community. Beyond the technical implementation, I learned many important lessons: from maintaining backup branches to safeguard work, to the value of thorough documentation and comprehensive testing, and most importantly, the role of curiosity and continuous learning in software engineering. These lessons will stay with me and prove invaluable in my future career.</p>
+<p>I am deeply grateful to my mentors, the RTEMS community, and to Google for providing me with this transformative opportunity and experience. I plan to continue contributing to RTEMS beyond GSoC, maintaining the implemented code and supporting future POSIX enhancements.</p>
+<h2 id="blog-posts-written-during-gsoc">Blog Posts Written During GSoC<a hidden class="anchor" aria-hidden="true" href="#blog-posts-written-during-gsoc">#</a></h2>
+<ul>
+<li><a href="../newposixapis/">New APIs Added to POSIX Standard (Issue 8): A Comprehensive Implementation Guide</a></li>
+<li><a href="../midtermeval/">GSoC 2025 Midterm Evaluation: Implementing POSIX Issue 8 Functions in RTEMS</a></li>
+<li><a href="../makingpatchestonewlib/">Submitting Patches To Newlib</a></li>
+<li><a href="../gettime/">Time APIs in C: A Deep Dive into timespec_get() and Modern Time Retrieval Methods</a></li>
+<li><a href="../pthreadinternals/">Threading and Synchronization in RTEMS: Understanding pthread Internals</a></li>
+<li><a href="../theworldofpthread/">The World of pthread: Exploring POSIX Threading</a></li>
+<li><a href="../rwlocksinternals/">Understanding RWLocks Internals in RTEMS</a></li>
+<li><a href="../theexitfamily/">The Exit Family: Understanding Process Termination</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/gsoc/">GSoC</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/rtems/">RTEMS</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/posix/">Posix</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/c/">C</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/programming/">Programming</a></li>
+      <li><a href="https://mez3n.github.io/mez3n.blog/tags/open-source/">Open Source</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://mez3n.github.io/mez3n.blog/">Mez3n&#39;s Blog</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

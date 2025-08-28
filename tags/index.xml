@@ -6,33 +6,47 @@
     <description>Recent content in Tags on Mez3n&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 17 Aug 2025 22:01:40 +0300</lastBuildDate>
+    <lastBuildDate>Thu, 28 Aug 2025 16:02:15 +0300</lastBuildDate>
     <atom:link href="https://mez3n.github.io/mez3n.blog/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>C</title>
       <link>https://mez3n.github.io/mez3n.blog/tags/c/</link>
-      <pubDate>Sun, 17 Aug 2025 22:01:40 +0300</pubDate>
+      <pubDate>Thu, 28 Aug 2025 16:02:15 +0300</pubDate>
       <guid>https://mez3n.github.io/mez3n.blog/tags/c/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>GSoC</title>
+      <link>https://mez3n.github.io/mez3n.blog/tags/gsoc/</link>
+      <pubDate>Thu, 28 Aug 2025 16:02:15 +0300</pubDate>
+      <guid>https://mez3n.github.io/mez3n.blog/tags/gsoc/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Open Source</title>
+      <link>https://mez3n.github.io/mez3n.blog/tags/open-source/</link>
+      <pubDate>Thu, 28 Aug 2025 16:02:15 +0300</pubDate>
+      <guid>https://mez3n.github.io/mez3n.blog/tags/open-source/</guid>
       <description></description>
     </item>
     <item>
       <title>Posix</title>
       <link>https://mez3n.github.io/mez3n.blog/tags/posix/</link>
-      <pubDate>Sun, 17 Aug 2025 22:01:40 +0300</pubDate>
+      <pubDate>Thu, 28 Aug 2025 16:02:15 +0300</pubDate>
       <guid>https://mez3n.github.io/mez3n.blog/tags/posix/</guid>
       <description></description>
     </item>
     <item>
       <title>Programming</title>
       <link>https://mez3n.github.io/mez3n.blog/tags/programming/</link>
-      <pubDate>Sun, 17 Aug 2025 22:01:40 +0300</pubDate>
+      <pubDate>Thu, 28 Aug 2025 16:02:15 +0300</pubDate>
       <guid>https://mez3n.github.io/mez3n.blog/tags/programming/</guid>
       <description></description>
     </item>
     <item>
       <title>RTEMS</title>
       <link>https://mez3n.github.io/mez3n.blog/tags/rtems/</link>
-      <pubDate>Sun, 17 Aug 2025 22:01:40 +0300</pubDate>
+      <pubDate>Thu, 28 Aug 2025 16:02:15 +0300</pubDate>
       <guid>https://mez3n.github.io/mez3n.blog/tags/rtems/</guid>
       <description></description>
     </item>
@@ -76,20 +90,6 @@
       <link>https://mez3n.github.io/mez3n.blog/tags/synchronization/</link>
       <pubDate>Wed, 16 Jul 2025 21:58:29 +0300</pubDate>
       <guid>https://mez3n.github.io/mez3n.blog/tags/synchronization/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>GSoC</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/gsoc/</link>
-      <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/gsoc/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Open Source</title>
-      <link>https://mez3n.github.io/mez3n.blog/tags/open-source/</link>
-      <pubDate>Wed, 16 Jul 2025 21:51:29 +0300</pubDate>
-      <guid>https://mez3n.github.io/mez3n.blog/tags/open-source/</guid>
       <description></description>
     </item>
     <item>
